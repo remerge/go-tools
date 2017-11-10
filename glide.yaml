@@ -1,0 +1,6 @@
+package: github.com/remerge/go-tools
+import: []
+testImport:
+- package: github.com/smartystreets/goconvey
+  subpackages:
+  - convey
