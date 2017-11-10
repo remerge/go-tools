@@ -1,3 +1,3 @@
 # go-tools
 
-Tools contains small utility subpackages which are to small to get their own repository. Please only add place small common function to this repository.
+go-tools contains utility subpackages which are too small for a dedicated repository. Please avoid anything that requires lots of dependencies or is complex. 
