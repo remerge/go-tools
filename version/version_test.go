@@ -48,6 +48,23 @@ func TestParse(t *testing.T) {
 	}
 }
 
+func compareStringOutput(t *testing.T, v *Version, expectedOutput string) {
+	if v.String() != expectedOutput {
+		t.Errorf("expected %s to be %s", v, expectedOutput)
+	}
+}
+
+func TestVersionString(t *testing.T) {
+	compareStringOutput(t, &Version{}, "")
+	compareStringOutput(t, &Version{Major: 1}, "1")
+	compareStringOutput(t, &Version{Minor: 2}, "0.2")
+	compareStringOutput(t, &Version{Major: 1, Minor: 2}, "1.2")
+	compareStringOutput(t, &Version{Patch: 3}, "0.0.3")
+	compareStringOutput(t, &Version{Major: 1, Patch: 3}, "1.0.3")
+	compareStringOutput(t, &Version{Minor: 2, Patch: 3}, "0.2.3")
+	compareStringOutput(t, &Version{Major: 1, Minor: 2, Patch: 3}, "1.2.3")
+}
+
 func TestVersionCompare(t *testing.T) {
 	version := Version{Major: 5, Minor: 5, Patch: 5}
 
