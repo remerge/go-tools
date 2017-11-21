@@ -4,40 +4,10 @@ import (
 	"testing"
 )
 
-func TestNormalizeVersion(t *testing.T) {
-	for _, v := range [][2]string{
-		{"11", "11"},
-		{"11.1", "11.1"},
-		{"5", "android : 5.0 : L : sdk=21 : LOLLIPOP : sdk=21"},
-		{"5.537", "5.00000000000000000000000000000000000000000000537"},
-		{"7", "7.0.0.0.0"},
-		{"7.0.1", "7.0.1"},
-		{"7.1", "7.1.0"},
-		{"7.1.1", "7.1.1"},
-		{"7.1.1", "7.1.1"},
-		{"1.2.3", "hey 1.2.3.4.5.6.7.8.9"},
-		{"12.1", "hey 12_1 3.4.5"},
-		{"5.4", "05.04"},
-		{"7", "07.00"},
-		{"11.1", "iOS 11.1"},
-		{"6.2", "TEST 6_2_0"},
-		{"6", "android : 6"},
-		{"20003", "20003"},
-		{"1000000.1000000", "999999999999999.9999999999"},
-		{"1000000.1000000", "9999999999999999999999999999999999999999.99999999999999999999999"},
-		{"1000000.1000000", "999999999999999999999999999999999999999999999999999999999999999999999.9999999999999999999999999999999999999999999999999999999999999999999"},
-		{"", "0"},
-		{"", "0.0.0.0 asdf"},
-		{"", "asdasd"},
-		{"", "null"},
-		{"", "unknown"},
-		{"", "other"},
-		{"", "."},
-		{"", "_"},
-	} {
-		actual := Version(v[1])
-		if actual != v[0] {
-			t.Errorf("expected %s for '%s' but got %s", v[0], v[1], actual)
-		}
+func TestVersion(t *testing.T) {
+	// Basic Test. Logic is tested in version.Version#String
+	normalizedVersion := Version("android : 5.1.0 : L : sdk=21 : LOLLIPOP : sdk=21")
+	if normalizedVersion != "5.1" {
+		t.Errorf("Expected normalized version to '5.1' but it was '%s'", normalizedVersion)
 	}
 }

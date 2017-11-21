@@ -1,0 +1,16 @@
+sudo: false
+language: go
+go:
+- 1.8
+cache:
+  directories:
+  - vendor
+install:
+- make dep
+script:
+- make test
+before_install:
+- git config --global url.git@github.com:.insteadof https://github.com/
+branches:
+  only:
+  - master

@@ -6,14 +6,14 @@ import (
 
 func TestNormalizeOs(t *testing.T) {
 	for os, strings := range map[string][]string{
-		"android": []string{
+		"android": {
 			"Android OS",
 			"  some anDroid OS",
 			"android",
 			"ANDROID",
 			"	anDroid_v1",
 		},
-		"ios": []string{
+		"ios": {
 			"iPhone X",
 			"   IPAD  ",
 			" MiniIpad",
