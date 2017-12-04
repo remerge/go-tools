@@ -2,6 +2,8 @@ package uuid
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var uuids = []struct {
@@ -31,5 +33,11 @@ func TestUUID(t *testing.T) {
 			t.Errorf("%s should be recognized as valid=%t but is valid=%t", uuid.id, uuid.valid, valid)
 		}
 	}
+}
 
+func TestUUIDOsMatching(t *testing.T) {
+	assert.True(t, MatchesOS("", "ios", "bla"), "an empty os should always match")
+	assert.False(t, MatchesOS("android", "ios", "bla"), "different OSs shouldn't match")
+	assert.False(t, MatchesOS("android", "android", "ED83F96D-D14E-4A81-8C7A-021DA055DEF5"), "correct OS but wrong user id shouldn't match")
+	assert.True(t, MatchesOS("ios", "ios", "ED83F96D-D14E-4A81-8C7A-021DA055DEF5"), "correct OS but correct user id should match")
 }

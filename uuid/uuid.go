@@ -1,6 +1,10 @@
 package uuid
 
-import "regexp"
+import (
+	"regexp"
+
+	"github.com/remerge/go-tools/normalize"
+)
 
 var uuidRegex = regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$")
 var uuidRegexiOS = regexp.MustCompile("^[A-F0-9]{8}-[A-F0-9]{4}-4[A-F0-9]{3}-[8|9|A|B][A-F0-9]{3}-[A-F0-9]{12}$")
@@ -31,4 +35,24 @@ func IsAndroid(uuid string) bool {
 		return false
 	}
 	return uuidRegexAndroid.MatchString(uuid)
+}
+
+func MatchesOS(expectedOS string, givenOS string, id string) bool {
+	if expectedOS == "" {
+		return true
+	}
+	if givenOS != "" && normalize.Os(givenOS) != expectedOS {
+		return false
+	}
+	switch expectedOS {
+	case "ios":
+		if !IsiOS(id) {
+			return false
+		}
+	case "android":
+		if !IsAndroid(id) {
+			return false
+		}
+	}
+	return true
 }
