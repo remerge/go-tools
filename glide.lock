@@ -1,5 +1,5 @@
 hash: 5036a784dfd27541e22a9948008b1d1ff2076e9bed67f22104bd0d2b8838ff5d
-updated: 2017-12-04T13:45:26.90633729+01:00
+updated: 2017-12-05T13:26:03.921960331+01:00
 imports:
 - name: github.com/stretchr/testify
   version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
@@ -7,7 +7,7 @@ imports:
   - assert
 testImports:
 - name: github.com/davecgh/go-spew
-  version: 04cdfd42973bb9c8589fd6a731800cf222fde1a9
+  version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
   subpackages:
   - spew
 - name: github.com/pmezard/go-difflib
