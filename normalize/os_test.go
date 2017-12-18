@@ -1,6 +1,7 @@
 package normalize
 
 import (
+	"regexp"
 	"testing"
 )
 
@@ -29,4 +30,29 @@ func TestNormalizeOs(t *testing.T) {
 			}
 		}
 	}
+}
+
+var osRegExp = regexp.MustCompile("(?i)(?P<ios>ipod|iphone|ipad|ios)|(?P<android>android)")
+var benchOs = []byte("iPhone X")
+
+func BenchmarkOsRegex(b *testing.B) {
+	var hits int
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			if osRegExp.Match(benchOs) {
+				hits++
+			}
+		}
+	})
+}
+
+func BenchmarkOsRagel(b *testing.B) {
+	var hits int
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			if matchOsiOS(benchOs) {
+				hits++
+			}
+		}
+	})
 }
