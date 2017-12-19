@@ -3,6 +3,9 @@ package version
 import (
 	"fmt"
 	"reflect"
+	"regexp"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -40,10 +43,11 @@ func TestParse(t *testing.T) {
 	}
 
 	for versionString, expected := range testCases {
-		version := Parse(versionString)
+		version := Parse([]byte(versionString))
 
 		if !reflect.DeepEqual(version, expected) {
-			t.Errorf("expect '%s' to be equal to '%s'", inspectVersion(version), inspectVersion(expected))
+			fmt.Printf("expect %v => '%s' to be equal to '%s'\n", versionString, inspectVersion(version), inspectVersion(expected))
+			t.Errorf("expect %v => '%s' to be equal to '%s'", versionString, inspectVersion(version), inspectVersion(expected))
 		}
 	}
 }
@@ -111,4 +115,55 @@ func TestVersionCompare(t *testing.T) {
 	if version.Compare(&Version{Major: 5, Minor: 5, Patch: 6}) > -1 {
 		t.Errorf("expected %s to be smaller than 5.5.6", inspectVersion(&version))
 	}
+}
+
+var versionRegExp = regexp.MustCompile(`(?P<major>\d+)\.?(?P<minor>\d+)?\.?(?P<patch>\d+)?`)
+
+func regexParse(str string) *Version {
+	version := &Version{}
+	if str == "" {
+		return version
+	}
+	str = strings.Replace(str, "_", ".", -1)
+	match := versionRegExp.FindStringSubmatch(str)
+	if len(match) == 0 {
+		return version
+	}
+	// fails for an empty string but that is ok
+	major, _ := strconv.Atoi(match[1])
+	minor, _ := strconv.Atoi(match[2])
+	patch, _ := strconv.Atoi(match[3])
+	// remove some insane versions
+	if major > 1000000 {
+		major = 1000000
+	}
+	if minor > 1000000 {
+		minor = 1000000
+	}
+	if patch > 1000000 {
+		patch = 1000000
+	}
+
+	version.Major = major
+	version.Minor = minor
+	version.Patch = patch
+
+	return version
+}
+
+func BenchmarkVersionRegex(b *testing.B) {
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			regexParse("7.1.1")
+		}
+	})
+}
+
+func BenchmarkVersionRagel(b *testing.B) {
+	v := []byte("7.1.1")
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			Parse(v)
+		}
+	})
 }
