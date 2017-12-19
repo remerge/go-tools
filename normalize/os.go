@@ -8,10 +8,10 @@ func Os(os string) string {
 		return ""
 	}
 	osBytes := []byte(os)
-	if matchOsiOS(osBytes) {
+	if MatchOsiOS(osBytes) {
 		return "ios"
 	}
-	if matchOsAndroid(osBytes) {
+	if MatchOsAndroid(osBytes) {
 		return "android"
 	}
 	return ""

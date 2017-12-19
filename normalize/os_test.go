@@ -50,7 +50,7 @@ func BenchmarkOsRagel(b *testing.B) {
 	var hits int
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
-			if matchOsiOS(benchOs) {
+			if MatchOsiOS(benchOs) {
 				hits++
 			}
 		}

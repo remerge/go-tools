@@ -5,7 +5,7 @@ package normalize
 	write data;
 }%%
 
-func matchOsiOS(data []byte) bool {
+func MatchOsiOS(data []byte) bool {
 	cs, p, pe := 0, 0, len(data)
 	%%{
 		main := any* ('ipod'i | 'iphone'i | 'ipad'i | 'ios'i) @{ return true } ;
@@ -20,7 +20,7 @@ func matchOsiOS(data []byte) bool {
 	write data;
 }%%
 
-func matchOsAndroid(data []byte) bool {
+func MatchOsAndroid(data []byte) bool {
 	cs, p, pe := 0, 0, len(data)
 	%%{
 		main := any* 'android'i @{ return true } ;
