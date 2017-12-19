@@ -1,4 +1,4 @@
-//go:generate ragel -Z version_fsm.rl
+//go:generate ragel -Z -G2 version_fsm.rl
 package version
 
 import (
