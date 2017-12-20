@@ -5,7 +5,7 @@ package version
 	write data;
 }%%
 
-func Parse(data []byte) *Version {
+func Parse(data string) *Version {
 	version := &Version{}
 
 	if len(data) < 1 {

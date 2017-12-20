@@ -10,7 +10,7 @@ const os_ios_en_main int = 0
 
 // line 6 "os_fsm.rl"
 
-func MatchOsiOS(data []byte) bool {
+func MatchOsiOS(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
 	// line 21 "os_fsm.go"
@@ -246,7 +246,7 @@ const os_android_en_main int = 0
 
 // line 21 "os_fsm.rl"
 
-func MatchOsAndroid(data []byte) bool {
+func MatchOsAndroid(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
 	// line 240 "os_fsm.go"

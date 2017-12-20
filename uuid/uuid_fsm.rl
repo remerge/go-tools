@@ -5,7 +5,7 @@ package uuid
 	write data;
 }%%
 
-func matchUuidRegex(data []byte) bool {
+func matchUuidRegex(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	eof := pe
 	%%{
@@ -21,7 +21,7 @@ func matchUuidRegex(data []byte) bool {
 	write data;
 }%%
 
-func matchUuidRegexiOS(data []byte) bool {
+func matchUuidRegexiOS(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	eof := pe
 	%%{
@@ -37,7 +37,7 @@ func matchUuidRegexiOS(data []byte) bool {
 	write data;
 }%%
 
-func matchUuidRegexAndroid(data []byte) bool {
+func matchUuidRegexAndroid(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	eof := pe
 	%%{

@@ -5,7 +5,7 @@ package normalize
 	write data;
 }%%
 
-func MatchDeviceiPod(data []byte) bool {
+func MatchDeviceiPod(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	%%{
 		main := any* 'ipod'i @{ return true } ;
@@ -20,7 +20,7 @@ func MatchDeviceiPod(data []byte) bool {
 	write data;
 }%%
 
-func MatchDeviceiPad(data []byte) bool {
+func MatchDeviceiPad(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	%%{
 		main := any* 'ipad'i @{ return true } ;
@@ -35,7 +35,7 @@ func MatchDeviceiPad(data []byte) bool {
 	write data;
 }%%
 
-func MatchDeviceiPhone(data []byte) bool {
+func MatchDeviceiPhone(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	%%{
 		main := any* 'iphone'i @{ return true } ;

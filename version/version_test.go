@@ -43,7 +43,7 @@ func TestParse(t *testing.T) {
 	}
 
 	for versionString, expected := range testCases {
-		version := Parse([]byte(versionString))
+		version := Parse(versionString)
 
 		if !reflect.DeepEqual(version, expected) {
 			fmt.Printf("expect %v => '%s' to be equal to '%s'\n", versionString, inspectVersion(version), inspectVersion(expected))
@@ -151,19 +151,49 @@ func regexParse(str string) *Version {
 	return version
 }
 
+var benchVersions = []string{
+	"11",
+	"11.1",
+	"5.00000000000000000000000000000000000000000000537",
+	"7.0.0.0.0",
+	"7.0.1",
+	"7.1.1",
+	"hey 1.2.3.4.5.6.7.8.9",
+	"hey 12_1 3.4.5",
+	"05.04",
+	"07.00",
+	"iOS 11.1",
+	"TEST 6_2_0",
+	"20003",
+	"999999999999999.9999999999",
+	"9999999999999999999999999999999999999999.99999999999999999999999",
+	"999999999999999999999999999999999999999999999999999999999999999999999.9999999999999999999999999999999999999999999999999999999999999999999",
+	"0",
+	"0.0.0.0 adsf",
+	"asdasd",
+	"null",
+	"unknown",
+	"other",
+	".",
+	"_",
+}
+
 func BenchmarkVersionRegex(b *testing.B) {
+	hits := 0
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
-			regexParse("7.1.1")
+			_ = regexParse(benchVersions[hits%len(benchVersions)])
+			hits++
 		}
 	})
 }
 
 func BenchmarkVersionRagel(b *testing.B) {
-	v := []byte("7.1.1")
+	hits := 0
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
-			Parse(v)
+			Parse(benchVersions[hits%len(benchVersions)])
+			hits++
 		}
 	})
 }

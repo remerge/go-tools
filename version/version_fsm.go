@@ -10,7 +10,7 @@ const version_parser_en_main int = 1
 
 // line 6 "version_fsm.rl"
 
-func Parse(data []byte) *Version {
+func Parse(data string) *Version {
 	version := &Version{}
 
 	if len(data) < 1 {

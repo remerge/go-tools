@@ -7,11 +7,10 @@ func Os(os string) string {
 	if os == "" {
 		return ""
 	}
-	osBytes := []byte(os)
-	if MatchOsiOS(osBytes) {
+	if MatchOsiOS(os) {
 		return "ios"
 	}
-	if MatchOsAndroid(osBytes) {
+	if MatchOsAndroid(os) {
 		return "android"
 	}
 	return ""

@@ -10,7 +10,7 @@ const device_ipod_en_main int = 0
 
 // line 6 "device_fsm.rl"
 
-func MatchDeviceiPod(data []byte) bool {
+func MatchDeviceiPod(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
 	// line 21 "device_fsm.go"
@@ -150,7 +150,7 @@ const device_ipad_en_main int = 0
 
 // line 21 "device_fsm.rl"
 
-func MatchDeviceiPad(data []byte) bool {
+func MatchDeviceiPad(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
 	// line 152 "device_fsm.go"
@@ -290,7 +290,7 @@ const device_iphone_en_main int = 0
 
 // line 36 "device_fsm.rl"
 
-func MatchDeviceiPhone(data []byte) bool {
+func MatchDeviceiPhone(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
 	// line 283 "device_fsm.go"

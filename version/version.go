@@ -6,7 +6,8 @@ import (
 	"strconv"
 )
 
-// Version represents a generic version number (For example IOS or Android version)
+// Version represents a generic version number (For example IOS or Android
+// version)
 type Version struct {
 	Major int
 	Minor int
@@ -26,7 +27,8 @@ func (version *Version) String() string {
 	return fmt.Sprintf("%d.%d.%d", version.Major, version.Minor, version.Patch)
 }
 
-// Compare a version to another. Will return a value < 0 if the version is smaller, 0 if both are equal and a value > 0 if it is larger
+// Compare a version to another. Will return a value < 0 if the version is
+// smaller, 0 if both are equal and a value > 0 if it is larger
 func (version *Version) Compare(other *Version) int {
 	cmpMajor := version.Major - other.Major
 

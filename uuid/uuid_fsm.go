@@ -10,7 +10,7 @@ const uuidRegex_en_main int = 1
 
 // line 6 "uuid_fsm.rl"
 
-func matchUuidRegex(data []byte) bool {
+func matchUuidRegex(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	eof := pe
 
@@ -857,7 +857,7 @@ const uuidRegexiOS_en_main int = 1
 
 // line 22 "uuid_fsm.rl"
 
-func matchUuidRegexiOS(data []byte) bool {
+func matchUuidRegexiOS(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	eof := pe
 
@@ -1580,7 +1580,7 @@ const uuidRegexAndroid_en_main int = 1
 
 // line 38 "uuid_fsm.rl"
 
-func matchUuidRegexAndroid(data []byte) bool {
+func matchUuidRegexAndroid(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	eof := pe
 

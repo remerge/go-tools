@@ -2,9 +2,9 @@ package normalize
 
 import "strings"
 
-// Currency check the given code against the ISO 4217 and returns
-// the uppercase version if it is valid. It returns EUR if € is passed and
-// USD if $ is passed as an argument. All other cases return the given fallback value.
+// Currency check the given code against the ISO 4217 and returns the uppercase
+// version if it is valid. It returns EUR if € is passed and USD if $ is passed
+// as an argument. All other cases return the given fallback value.
 func Currency(given, fallback string) string {
 	if given == "" {
 		return fallback
