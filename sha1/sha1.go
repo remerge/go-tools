@@ -7,6 +7,7 @@ import (
 	"os"
 )
 
+// SHA1 calculates the sha1 hash of a byte slice
 func SHA1(data []byte) []byte {
 	hasher := Sum(data)
 	return hasher[:]

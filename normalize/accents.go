@@ -11,15 +11,18 @@ func RemoveAccents(text string) string {
 	for _, c := range text {
 		// Check transliterations first
 		if val, ok := transliterations[c]; ok {
+			// nolint: gas,errcheck
 			_, _ = b.WriteString(val)
 		} else {
+			// nolint: gas,errcheck
 			_, _ = b.WriteRune(c)
 		}
 	}
 	return b.String()
 }
 
-// A very limited list of transliterations to catch common european names translated to urls.
+// A very limited list of transliterations to catch
+// common european names translated to urls.
 // This set could be expanded with at least caps and many more characters.
 var transliterations = map[rune]string{
 	'À': "A",
