@@ -27,7 +27,7 @@ var uuids = []struct {
 
 func TestUUID(t *testing.T) {
 	for _, uuid := range uuids {
-		possiblyValid := isValidFast(uuid.id)
+		possiblyValid := IsValidFast(uuid.id)
 		if uuid.possiblyValid != possiblyValid {
 			t.Errorf("%s should be recognized as possibltyValid=%t but is possibltyValid=%t", uuid.id, uuid.possiblyValid, possiblyValid)
 		}
