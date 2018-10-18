@@ -79,3 +79,7 @@ release:
 deploy:
 	/bin/bash -c 'cd ../chef.new && knife ssh roles:$(PROJECT) sudo chef-client'
 	/bin/bash -c 'cd ../chef && knife sudo -Q roles:$(PROJECT) chef-client'
+
+# if included update the makefile subtree to the latest version
+update-makefile:
+	git subtree pull --prefix=mkf makefile master
