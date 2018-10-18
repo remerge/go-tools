@@ -1,4 +1,5 @@
 PROJECT := go-tools
 PACKAGE := github.com/remerge/$(PROJECT)
+REVIVELINTER_EXCLUDES = $(foreach p,$(wildcard **/*_fsm.go),-exclude $(p)) 
 
-include Makefile.common
+include mkf/Makefile.common

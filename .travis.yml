@@ -1,16 +1,27 @@
 sudo: false
 language: go
 go:
-- 1.9.2
+- "1.11"
+
 cache:
   directories:
-  - vendor
-install:
-- make dep
-script:
-- make test
+  - $GOPATH/pkg/mod
+  - $GOPATH/bin
+  - $HOME/.cache/go-build
+
 before_install:
 - git config --global url.git@github.com:.insteadof https://github.com/
+
+install:
+- make dep
+
+script:
+- make test
+
 branches:
   only:
   - master
+
+notifications:
+  slack:
+    secure: A/BZm/7ISFDUQi+IDYtmph8Jd7Un7Gpbl1N/L7J53dpvwirHEcoir4a105fgDAVw21JQ8YFQNZTtwR42YGKd1uUs3F+u5PwXk5e3FmU2yCfAhT7Fc7G7rlR4TzsF8llltKUqxv34yBU3P6pmosomMkyyV1ohbAqB10uctxqa02w=

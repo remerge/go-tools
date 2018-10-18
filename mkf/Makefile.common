@@ -47,7 +47,7 @@ clean:
 	$(GO) clean -i -x
 	rm -f $(PROJECT)
 
-lint: build
+lint:
 	revive -config revive.toml  -formatter friendly $(REVIVELINTER_EXCLUDES)  ./...
 		
 test: lint
