@@ -1,7 +1,7 @@
 GO=GO111MODULE=on go
 GOFMT=gofmt -w -s
+REVIVE := $(GOBIN)/revive
 GOFILES=$(shell git ls-files | grep '\.go$$')
-
 MAIN=./cmd/$(PROJECT)
 
 ifeq ($(GOTEST_TIMEOUT),)
@@ -47,8 +47,20 @@ clean:
 	$(GO) clean -i -x
 	rm -f $(PROJECT)
 
+<<<<<<< HEAD
 lint:
 	revive -config revive.toml  -formatter friendly $(REVIVELINTER_EXCLUDES)  ./...
+=======
+# currently there is no good solution for Go 1.11 to manage global vs local tools
+# we just use the "easy" way for now. People have to update this manually if they need a newer version
+# see https://github.com/golang/go/issues/24250 , https://github.com/golang/go/issues/25922 and https://github.com/golang/go/issues/27653
+# another option is https://github.com/twitchtv/retool but that is another dependancy that makes things more complex 
+$(REVIVE):
+	which revive >/dev/null 2>&1 || GO111MODULE=off go get -u github.com/remerge/revive
+
+lint: $(REVIVE)
+	revive -config mkf/revive.toml  -formatter friendly $(REVIVELINTER_EXCLUDES)  ./...
+>>>>>>> 45c028f7bff8fffb9476afe166c3b3e3b8684e28
 		
 test: lint
 	$(GO) test -timeout $(GOTEST_TIMEOUT) -v ./...
@@ -63,11 +75,6 @@ build-escape:
 fmt:
 	$(GOFMT) $(GOFILES)
 
-dep:
-	go get -u github.com/remerge/revive
-
-up:
-	go get -u
 
 gen:
 	$(GO) generate ./...
@@ -83,3 +90,9 @@ deploy:
 # if included update the makefile subtree to the latest version
 update-makefile:
 	git subtree pull --prefix=mkf makefile master
+
+upstream-makefile:
+	git subtree push --prefix=mkf makefile master
+
+
+# which retool >/dev/null 2>&1 || go get github.com/twitchtv/retool
