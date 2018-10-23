@@ -91,6 +91,3 @@ update-makefile:
 
 upstream-makefile:
 	git subtree push --prefix=mkf makefile master
-
-
-# which retool >/dev/null 2>&1 || go get github.com/twitchtv/retool
