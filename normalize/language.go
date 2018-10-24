@@ -2,7 +2,7 @@ package normalize
 
 // Language tries to normalize given string to ISO-639-1
 // or returns empty string
-func Language(in string) (out string) {
+func Language(in string) string {
 	if len(in) < 2 || in == "undefined" {
 		return ""
 	}
