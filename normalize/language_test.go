@@ -20,6 +20,11 @@ func TestLanguage(t *testing.T) {
 		{"undefined", ""},                       // bad
 		{"-s", ""},                              // ???
 		{"0", ""},                               // ???
+		// terminals
+		{"af-af","af"},
+		{"AF-AF", "af"},
+		{"zu-zu", "zu"},
+		{"ZU-ZU", "zu"},
 	}
 
 	for _, l := range langs {
