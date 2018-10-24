@@ -3,7 +3,8 @@ package normalize
 // Language tries to normalize given string to ISO-639-1
 // or returns empty string
 func Language(in string) string {
-	if len(in) < 2 || in == "undefined" {
+	inSize := len(in)
+	if inSize < 2 || (inSize > 2 && (isByteLowercase(in[2]) || isByteUppercase(in[2]))) {
 		return ""
 	}
 	raw := make([]byte, 2)
@@ -18,12 +19,20 @@ func Language(in string) string {
 }
 
 func langByte(in byte) (out byte, ok bool) {
-	if in > 96 && in < 123 {
+	if isByteLowercase(in) {
 		// ok, lowercase
 		return in, true
 	}
-	if in > 64 && in < 91 {
+	if isByteUppercase(in) {
 		return in+32, true
 	}
 	return 0, false
+}
+
+func isByteLowercase(in byte) bool  {
+	return in > 96 && in < 123
+}
+
+func isByteUppercase(in byte) bool  {
+	return in > 64 && in < 91
 }

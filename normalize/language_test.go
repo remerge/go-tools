@@ -25,6 +25,7 @@ func TestLanguage(t *testing.T) {
 		{"AF-AF", "af"},
 		{"zu-zu", "zu"},
 		{"ZU-ZU", "zu"},
+		{"bad", ""},
 	}
 
 	for _, l := range langs {
