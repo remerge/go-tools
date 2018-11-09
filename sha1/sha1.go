@@ -1,15 +1,14 @@
 package sha1
 
 import (
-	// nolint:golint
-	. "crypto/sha1"
+	"crypto/sha1"
 	"io"
 	"os"
 )
 
 // SHA1 calculates the sha1 hash of a byte slice
 func SHA1(data []byte) []byte {
-	hasher := Sum(data)
+	hasher := sha1.Sum(data)
 	return hasher[:]
 }
 
@@ -30,7 +29,7 @@ func SHA1F(filename string) ([]byte, error) {
 		_ = file.Close()
 	}()
 
-	hasher := New()
+	hasher := sha1.New()
 	_, err = io.Copy(hasher, file)
 	if err != nil {
 		return nil, err
