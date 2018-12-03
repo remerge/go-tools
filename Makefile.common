@@ -2,7 +2,7 @@ GO=GO111MODULE=on go
 GOFMT=gofmt -w -s
 REVIVE := $(GOBIN)/revive
 GOFILES=$(shell git ls-files | grep '\.go$$')
-MAIN=./cmd/$(PROJECT)
+MAIN=./main
 
 ifeq ($(GOTEST_TIMEOUT),)
 	GOTEST_TIMEOUT=60s
