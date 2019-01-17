@@ -18,7 +18,7 @@ ifeq ($(CODE_BUILD),\#)
 	CODE_BUILD=$(PACKAGE)\#$(shell whoami)
 endif
 
-LDIMPORT=$(PACKAGE)/vendor/github.com/remerge/go-service
+LDIMPORT=github.com/remerge/go-service
 LDFLAGS=-X $(LDIMPORT).CodeVersion=$(CODE_VERSION) -X $(LDIMPORT).CodeBuild=$(CODE_BUILD)@$(shell date -u +%FT%TZ)
 
 .PHONY: build build-dist run run-bin clean lint test bench fmt dep up gen proto-dep proto release deploy
