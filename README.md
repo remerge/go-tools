@@ -29,3 +29,16 @@ REVIVELINTER_EXCLUDES = $(foreach p,$(wildcard **/*_fsm.go),-exclude $(p))
 
 include mkf/Makefile.common
 ```
+
+## Targets
+
+### lint
+
+This target invokes Go format check, vet and revive linter. Revive will be
+installed automatically if it not present on host. To override revive config 
+put `revive.toml` in root of build tree. Use `REVIVELINTER_EXCLUDES` to add 
+excludes.
+
+```
+REVIVELINTER_EXCLUDES = $(foreach p,$(wildcard **/*_fsm.go),-exclude $(p))
+```
