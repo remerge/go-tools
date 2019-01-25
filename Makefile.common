@@ -11,7 +11,6 @@ export GO111MODULE ?= on
 .SUFFIXES:
 
 GO=GO111MODULE=on go
-GOFMT=gofmt -w -s
 GOFILES=$(shell git ls-files | grep '\.go$$')
 MAIN=./main
 
@@ -68,13 +67,6 @@ bench: build
 build-escape:
 	CGO_ENABLED=0 $(GO) build -v -gcflags '-m -m -l -e' -ldflags "$(LDFLAGS)" ./...
 
-fmt: $(GO_SOURCES)	## format go sources
-	gofmt -w -s -l $^
-
-gen:
-	$(GO) generate ./...
-	$(GOFMT) $(GOFILES)
-
 release:
 	git push origin master:production
 
@@ -92,6 +84,19 @@ update-makefile: check-makefile-remote
 upstream-makefile: check-makefile-remote
 	git subtree push --prefix=$(MKF_PREFIX) makefile master
 
+
+###
+### Code maintenance
+###
+
+GENERATE_SOURCES ?=
+
+gen: $(GENERATE_SOURCES)
+	go generate ./...
+	$(MAKE) fmt
+
+fmt: $(GO_SOURCES)	## format go sources
+	gofmt -w -s -l $^
 
 ###
 ### *lint* target will run go fmt check, vet and revive. Revive
