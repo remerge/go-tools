@@ -4,19 +4,16 @@ PACKAGE ?= github.com/remerge/$(PROJECT)
 MKF_PREFIX ?= mkf
 
 # all go sources in build tree excluding vendor
-GO_SOURCES = $(shell find . -type f \( -iname '*.go' \) -not \( -path "./vendor/*" -path ".*" \) 2>/dev/null)
+GO_SOURCES = $(shell find . -type f \( -iname '*.go' \) -not \( -path "./vendor/*" -path ".*" \))
 
 export GO111MODULE ?= on
+export CGO_ENABLED = 0
 # do not use automatic targets
 .SUFFIXES:
 
 GO=GO111MODULE=on go
 GOFILES=$(shell git ls-files | grep '\.go$$')
 MAIN=./main
-
-ifeq ($(GOTEST_TIMEOUT),)
-	GOTEST_TIMEOUT=60s
-endif
 
 CODE_VERSION=$(TRAVIS_COMMIT)
 ifeq ($(CODE_VERSION),)
@@ -31,7 +28,7 @@ endif
 LDIMPORT=github.com/remerge/go-service
 LDFLAGS=-X $(LDIMPORT).CodeVersion=$(CODE_VERSION) -X $(LDIMPORT).CodeBuild=$(CODE_BUILD)@$(shell date -u +%FT%TZ)
 
-.PHONY: build build-dist run run-bin clean test bench dep up gen proto-dep proto release deploy
+.PHONY: build build-dist run run-bin clean gen proto-dep proto release deploy
 
 all: build
 
@@ -56,12 +53,6 @@ run-bin: build
 clean:
 	$(GO) clean -i -x
 	rm -f $(PROJECT)
-
-test: lint
-	$(GO) test -timeout $(GOTEST_TIMEOUT) -v ./...
-
-bench: build
-	$(GO) test -bench=. -benchmem -cpu 32 ./...
 
 # builds with escape analysis active
 build-escape:
@@ -98,12 +89,49 @@ gen: $(GENERATE_SOURCES)
 fmt: $(GO_SOURCES)	## format go sources
 	gofmt -w -s -l $^
 
+
+###
+### dependencies
+###
+
+go.mod: $(GO_SOURCES)	## tidy go.mod
+	go mod tidy
+
+mod-outdated: $(GO_SOURCES) ## check outdated deps
+	rm -f go.sum /tmp/$(PROJECT).go.mod.bak /tmp/$(PROJECT).go.mod.up
+	cp go.mod /tmp/$(PROJECT).go.mod.bak
+	go get -u
+	go mod tidy
+	mv go.mod /tmp/$(PROJECT).go.mod.up
+	mv /tmp/$(PROJECT).go.mod.bak go.mod
+	diff go.mod /tmp/$(PROJECT).go.mod.up
+
+
+###
+### Test
+###
+
+TEST_TIMEOUT ?= 60s
+TESTS ?= .
+
+test: $(GO_SOURCES) go.mod	## regular tests
+	go test -timeout=$(TEST_TIMEOUT) -run=$(TESTS) ./...
+
+race: $(GO_SOURCES) go.mod	## race tests
+	go test -race -timeout=$(TEST_TIMEOUT) -run=$(TESTS) ./...
+
+bench: $(GO_SOURCES) go.mod	## benchmarks
+	go test -run=^$ -bench=$(TESTS) -benchmem -cpu 32 ./...
+
+test-nocache: $(GO_SOURCES) go.mod
+	go test -count=1 -timeout=$(TEST_TIMEOUT) -run=$(TESTS) ./...
+
+
 ###
 ### *lint* target will run go fmt check, vet and revive. Revive
 ### config can be overriden by put "revive.toml" to build tree root.
 ### Use "REVIVELINTER_EXCLUDES" to exclude files from revive.
 ###
-
 
 lint: .lint-fmt .lint-vet .lint-revive ## run all linters
 

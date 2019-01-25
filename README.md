@@ -30,6 +30,16 @@ REVIVELINTER_EXCLUDES = $(foreach p,$(wildcard **/*_fsm.go),-exclude $(p))
 include mkf/Makefile.common
 ```
 
+## Modules
+
+### Vendor
+
+From Go 1.11 modules used instead vendor. To maintain vendor directory use
+
+```
+GO111MODULES=on go mod vendor
+```
+
 ## Targets
 
 ### lint
