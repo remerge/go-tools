@@ -102,7 +102,7 @@ test-nocache: $(GO_SOURCES) go.mod
 ### Use "REVIVELINTER_EXCLUDES" to exclude files from revive.
 ###
 
-lint: .lint-fmt .lint-vet .lint-revive ## run all linters
+lint: .lint-fmt .lint-vet .lint-revive .lint-fix ## run all linters
 
 .lint-fmt: $(GO_SOURCES) ## compare gofmt output
 	@DIFF=`gofmt -s -d $^` && echo "$$DIFF" && test -z "$$DIFF"
@@ -114,6 +114,9 @@ lint: .lint-fmt .lint-vet .lint-revive ## run all linters
 REVIVE_CONFIG = $(or $(wildcard revive.toml),$(MKF_PREFIX)/revive.toml)
 .lint-revive: $(GO_SOURCES) $(REVIVE_CONFIG) .install-revive	## run revive linter
 	revive -config $(REVIVE_CONFIG) -formatter friendly -exclude ./vendor/... $(REVIVELINTER_EXCLUDES) ./...
+
+.lint-fix: $(GO_SOURCES) ## run fix
+	@DIFF=`go tool fix -diff $^` && echo "$$DIFF" && test -z "$$DIFF"	
 
 # currently there is no good solution for Go 1.11 to manage global vs local tools
 # we just use the "easy" way for now. People have to update this manually if they need a newer version
