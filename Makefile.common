@@ -25,38 +25,7 @@ ifeq ($(CODE_BUILD),\#)
 	CODE_BUILD=$(PACKAGE)\#$(shell whoami)
 endif
 
-LDIMPORT=github.com/remerge/go-service
-LDFLAGS=-X $(LDIMPORT).CodeVersion=$(CODE_VERSION) -X $(LDIMPORT).CodeBuild=$(CODE_BUILD)@$(shell date -u +%FT%TZ)
-
-.PHONY: build build-dist run run-bin clean gen proto-dep proto release deploy
-
-all: build
-
-build:
-	CGO_ENABLED=0 $(GO) test -v -i
-	CGO_ENABLED=0 $(GO) build -v -i -ldflags "$(LDFLAGS)" -o $(PROJECT) $(MAIN)
-
-build-dist:
-	CGO_ENABLED=0 \
-	GOOS=linux GOARCH=amd64 \
-	$(GO) build -v -i -ldflags "$(LDFLAGS)" -o $(PROJECT).x86_64 $(MAIN)
-	CGO_ENABLED=0 \
-	GOOS=linux GOARCH=arm64 \
-	$(GO) build -v -i -ldflags "$(LDFLAGS)" -o $(PROJECT).aarch64 $(MAIN)
-
-run:
-	$(GO) run $(MAIN)
-
-run-bin: build
-	./$(PROJECT)
-
-clean:
-	$(GO) clean -i -x
-	rm -f $(PROJECT)
-
-# builds with escape analysis active
-build-escape:
-	CGO_ENABLED=0 $(GO) build -v -gcflags '-m -m -l -e' -ldflags "$(LDFLAGS)" ./...
+.PHONY: build dist run-bin clean gen proto-dep proto release deploy
 
 release:
 	git push origin master:production
