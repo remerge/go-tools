@@ -12,7 +12,7 @@ Add this repository as a subtree to the go project repository.
 
 ```
 git remote add makefile https://github.com/remerge/go-makefile.git
-git subtree add --prefix mkf/ makefile master
+git subtree add --squash --prefix mkf/ makefile master
 ```
 Afterwards `mkf/Makefile.common` can be included in the parent project.
 

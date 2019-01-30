@@ -39,7 +39,7 @@ check-makefile-remote:
 	git remote | grep makefile || git remote add makefile https://github.com/remerge/go-makefile.git
 
 update-makefile: check-makefile-remote
-	git subtree pull --prefix=$(MKF_PREFIX) makefile master
+	git subtree pull --squash --prefix=$(MKF_PREFIX) makefile master
 
 upstream-makefile: check-makefile-remote
 	git subtree push --prefix=$(MKF_PREFIX) makefile master
