@@ -52,3 +52,46 @@ excludes.
 ```
 REVIVELINTER_EXCLUDES = $(foreach p,$(wildcard **/*_fsm.go),-exclude $(p))
 ```
+
+## Isolated test deployment (diversion)
+
+Sometimes run application on isolated instance is the best way to test it. *This is
+not safe regular deployment!* You must warn your colleagues.
+
+### Requirements
+
+1. SSH access and sudo rights on target machine
+1. Minimal knowledge about SystemD
+1. Go with crossplatform build on developer machine
+
+### Setup and teardown
+
+For each operation you need to define the `DIVERT_SSH` environment variable.
+
+```shell
+$ DIVERT_SSH=user@app.machine make ...
+$ make ... DIVERT_SSH=user@app.machine
+```
+
+Alternatively `DIVERT_SSH` can be defined globally:
+
+```shell
+$ export DIVERT_SSH=user@app.machine
+```
+
+> Diversion status may be checked by `.CHECK-divert-on` and
+  `.CHECK-divert-on` targets.
+
+Now you can run the `divert-setup` target. This target will prepare the basic setup and
+stop `chef-client`.
+
+To revert diversion environment and start `chef-client` use `divert-teardown` target.
+
+### Journal
+
+Use `divert-journal` to follow application log. This target is not depends on
+diverted environment.
+
+### Deploy
+
+Use `divert-do` target to deploy dev version.
