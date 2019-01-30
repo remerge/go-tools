@@ -11,21 +11,7 @@ export CGO_ENABLED = 0
 # do not use automatic targets
 .SUFFIXES:
 
-GO=GO111MODULE=on go
-GOFILES=$(shell git ls-files | grep '\.go$$')
-MAIN=./main
-
-CODE_VERSION=$(TRAVIS_COMMIT)
-ifeq ($(CODE_VERSION),)
-	CODE_VERSION=$(shell git rev-parse --short HEAD)-dev
-endif
-
-CODE_BUILD=$(TRAVIS_REPO_SLUG)\#$(TRAVIS_JOB_NUMBER)
-ifeq ($(CODE_BUILD),\#)
-	CODE_BUILD=$(PACKAGE)\#$(shell whoami)
-endif
-
-.PHONY: build dist run-bin clean gen proto-dep proto release deploy
+.PHONY: clean gen
 
 release:
 	git push origin master:production
