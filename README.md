@@ -30,6 +30,29 @@ REVIVELINTER_EXCLUDES = $(foreach p,$(wildcard **/*_fsm.go),-exclude $(p))
 include mkf/Makefile.common
 ```
 
+## Testing
+
+From the box you can use three targets:
+
+- `test` Run tests
+- `race` Run tests with race detection. Recommended over `test`
+- `bench` Run benchmarks
+
+Behaviour can be altered with following variables:
+
+- `TESTS` Tests pattern
+- `TEST_TIMEOUT` Tests timeout
+- `TEST_TAGS` Use specific tags for tests delimited by comma
+
+```
+$ make test TESTS=TestSomething TEST_TAGS="integration,postgres"
+```
+
+Two additional `test-nocache` and `race-nocache` targets are same as `test` and
+`race` but always runs each test. It's highly recommends to use `*-nocache` 
+targets in CI to detect fragile tests. To maintain thread-safe code 
+`race-nocache` is more preferable than `test-nocache`.
+
 ## Modules
 
 ### Vendor
