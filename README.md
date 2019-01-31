@@ -55,7 +55,7 @@ targets in CI to detect fragile tests. To maintain thread-safe code
 
 ## Modules
 
-### Vendor
+Use `mod-tidy` to tidy Go modules.
 
 From Go 1.11 modules used instead vendor. To maintain vendor directory use
 
@@ -63,18 +63,21 @@ From Go 1.11 modules used instead vendor. To maintain vendor directory use
 GO111MODULES=on go mod vendor
 ```
 
-## Targets
+## lint
 
-### lint
-
-This target invokes Go format check, vet and revive linter. Revive will be
-installed automatically if it not present on host. To override revive config 
-put `revive.toml` in root of build tree. Use `REVIVELINTER_EXCLUDES` to add 
-excludes.
+This target invokes Go format, modules consistency, check, vet and revive 
+linter. Revive will be installed automatically if it not present on host. To 
+override revive config put `revive.toml` in root of build tree. 
+Use `REVIVELINTER_EXCLUDES` to add excludes.
 
 ```
 REVIVELINTER_EXCLUDES = $(foreach p,$(wildcard **/*_fsm.go),-exclude $(p))
 ```
+
+`lint` target guarantees to never change sources.
+
+`lint-mod-outdated` checks all modules are up to date. It's disabled until 
+we migrate to upstream pq and sarama.
 
 ## Isolated test deployment (diversion)
 
