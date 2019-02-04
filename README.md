@@ -65,8 +65,20 @@ GO111MODULES=on go mod vendor
 
 ## lint
 
-This target invokes Go format, modules consistency, check, vet and revive 
-linter. Revive will be installed automatically if it not present on host. To 
+This target invokes Go format, modules consistency, check, vet and revive.
+
+### vet
+
+To use specific vet flags use `VET_FLAGS` variable.
+
+```
+VET_FLAGS = -unsafeptr=false
+include mkf/Makefile.common
+``` 
+
+### revive
+
+Revive will be installed automatically if it not present on host. To 
 override revive config put `revive.toml` in root of build tree. 
 Use `REVIVELINTER_EXCLUDES` variable to add excludes.
 

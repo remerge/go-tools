@@ -82,6 +82,7 @@ race-nocache: $(GO_SOURCES) go.mod
 ### *lint* target will run go fmt check, vet and revive. Revive
 ### config can be overriden by put "revive.toml" to build tree root.
 ### Use "REVIVELINTER_EXCLUDES" to exclude files from revive.
+### Use "VET_FLAGS" to define vet linter flags.
 ###
 
 lint: .lint-mod-tidy .lint-fmt .lint-vet .lint-revive .lint-fix ## run all linters
@@ -90,7 +91,7 @@ lint: .lint-mod-tidy .lint-fmt .lint-vet .lint-revive .lint-fix ## run all linte
 	@DIFF=`gofmt -s -d $^` && echo "$$DIFF" && test -z "$$DIFF"
 
 .lint-vet: $(GO_SOURCES) go.mod ## run vet
-	go vet ./...
+	go vet $(VET_FLAGS) ./...
 .NOTPARALLEL: .lint-vet
 
 REVIVE_CONFIG = $(or $(wildcard revive.toml),$(MKF_PREFIX)/revive.toml)
