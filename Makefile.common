@@ -6,7 +6,7 @@ MKF_PREFIX ?= mkf
 # all go sources in build tree excluding vendor
 GO_SOURCES = $(shell find . -type f \( -iname '*.go' \) -not \( -path "./vendor/*" -path ".*" \))
 
-export GO111MODULE ?= on
+export GO111MODULE = on
 export CGO_ENABLED = 0
 # do not use automatic targets
 .SUFFIXES:
