@@ -63,6 +63,10 @@ From Go 1.11 modules used instead vendor. To maintain vendor directory use
 GO111MODULES=on go mod vendor
 ```
 
+## watch
+
+Watches your go code for changes and constantly rebuild it and run tests
+
 ## lint
 
 This target invokes Go format, modules consistency, check, vet and revive.
