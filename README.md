@@ -23,12 +23,29 @@ Afterwards `mkf/Makefile.common` can be included in the parent project.
 ## Example
 
 ```
-PROJECT := go-tools
-PACKAGE := github.com/remerge/$(PROJECT)
 REVIVELINTER_EXCLUDES = $(foreach p,$(wildcard **/*_fsm.go),-exclude $(p))
 
 include mkf/Makefile.common
 ```
+
+## Build
+
+Basically you always build locally using
+
+```
+make local
+```
+
+Build on the server (using CI most probably) is done using
+
+```
+make dist
+```
+
+## CI
+
+Speaking about CI [here is example .travis.yml file](https://github.com/remerge/go-makefile/blob/master/travis.yaml)
+
 
 ## Testing
 
