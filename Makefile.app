@@ -1,14 +1,8 @@
-###
-### maintenance
-###
-
 clean::
 	-rm -rf .build/*
 
 
-###
-### binaries
-###
+# Buidling binaries
 
 TRAVIS_COMMIT ?= dev.$(shell whoami).$(shell git rev-parse --short HEAD)
 TRAVIS_REPO_SLUG ?= $(PACKAGE)
@@ -30,6 +24,10 @@ dist: .build/$(PROJECT).linux.amd64	## linux amd64 binary
 
 local: .build/$(.BIN_LOCAL)
 
+# Deployment
 
-escape: $(GO_SOURCES) go.mod ## builds with escape analysis active
-	go build -v -gcflags '-m -m -l -e' -ldflags "$(LDFLAGS)" ./...
+release:
+	git push origin master:production
+
+deploy:
+	/bin/bash -c 'cd ../chef.new && knife ssh roles:$(PROJECT) sudo chef-client'
