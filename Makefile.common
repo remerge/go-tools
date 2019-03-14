@@ -42,7 +42,7 @@ mod-tidy:	## tidy go.mod
 
 # Testing
 
-TEST_TIMEOUT ?= 60s
+TEST_TIMEOUT ?= 600s
 TESTS ?= .
 TEST_TAGS ?=
 
