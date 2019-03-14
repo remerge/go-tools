@@ -67,7 +67,7 @@ escape: $(GO_SOURCES) go.mod ## builds with escape analysis active
 
 watch: .install-reflex
 	reflex -r '\.go$$' -s -- sh -c 'clear && go test -v -run=Test$(T)'
-
+.PHONY: watch
 
 # Linting
 
