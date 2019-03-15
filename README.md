@@ -47,9 +47,10 @@ Behaviour can be altered with following variables:
 - `TESTS` Tests pattern
 - `TEST_TIMEOUT` Tests timeout
 - `TEST_TAGS` Use specific tags for tests delimited by comma
+- `TEST_ARGS` Additional test arguments
 
 ```
-$ make test TESTS=TestSomething TEST_TAGS="integration,postgres"
+$ make test TESTS=TestSomething TEST_TAGS="integration,postgres" TEST_ARGS=-v
 ```
 
 To run the tests without test caching use `test-nocache` (and `race-nocache`)
