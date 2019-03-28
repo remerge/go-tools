@@ -78,7 +78,7 @@ watch: .install-reflex
 # Use "VET_FLAGS" to define vet linter flags.
 
 
-lint: .lint-mod-tidy .lint-fmt .lint-vet .lint-revive .lint-fix ## run all linters
+lint:: .lint-mod-tidy .lint-fmt .lint-vet .lint-revive .lint-fix ## run all linters
 
 .lint-fmt: $(GO_SOURCES) ## compare gofmt output
 	@DIFF=`gofmt -s -d $^` && echo "$$DIFF" && test -z "$$DIFF"
