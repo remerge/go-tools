@@ -32,6 +32,21 @@ check-makefile-remote:
 update-makefile: check-makefile-remote
 	git subtree pull --squash --prefix=$(MKF_PREFIX) makefile master
 
+# External tools
+
+# Use as prerequisite. Requested tool will be installed automatically on demand.
+#
+# 	lint-shadow: $(TOOLS)/golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow $(GO_SOURCES)
+#		go vet -vettool=$< ./...
+#
+
+TOOLS ?= $(MKF_PREFIX)/.tools
+$(TOOLS)/%:
+	test -x "$@" || GO111MODULE=off GOBIN=$(shell pwd)/$(dir $@) go get -u $*
+
+clean::
+	rm -rf $(TOOLS)
+
 # Dependencies cleanup
 
 mod-tidy:	## tidy go.mod
@@ -66,8 +81,8 @@ escape: $(GO_SOURCES) go.mod ## builds with escape analysis active
 	go build -v -gcflags '-m -m -l -e' ./...
 
 
-watch: .install-reflex
-	reflex -r '\.go$$' -s -- sh -c 'clear && go test -v -run=Test$(T)'
+watch: $(TOOLS)/github.com/cespare/reflex
+	$< -r '\.go$$' -s -- sh -c 'clear && go test -v -run=Test$(T)'
 .PHONY: watch
 
 # Linting
@@ -88,8 +103,8 @@ lint:: .lint-mod-tidy .lint-fmt .lint-vet .lint-revive .lint-fix ## run all lint
 .NOTPARALLEL: .lint-vet
 
 REVIVE_CONFIG = $(or $(wildcard revive.toml),$(MKF_PREFIX)/revive.toml)
-.lint-revive: $(GO_SOURCES) $(REVIVE_CONFIG) .install-revive	## run revive linter
-	revive -config $(REVIVE_CONFIG) -formatter friendly -exclude ./vendor/... $(REVIVELINTER_EXCLUDES) ./...
+.lint-revive: $(TOOLS)/github.com/remerge/revive $(GO_SOURCES) $(REVIVE_CONFIG)	## run revive linter
+	$< -config $(REVIVE_CONFIG) -formatter friendly -exclude ./vendor/... $(REVIVELINTER_EXCLUDES) ./...
 
 .lint-fix: $(GO_SOURCES) ## run fix
 	@DIFF=`go tool fix -diff $^` && echo "$$DIFF" && test -z "$$DIFF"
@@ -114,16 +129,3 @@ lint-mod-outdated:  ## check outdated deps
 	diff go.mod /tmp/$(PROJECT).go.mod.up
 .NOTPARALLEL: .lint-mod-tidy
 .PHONY: .lint-mod-tidy
-
-
-# Tool installation
-
-# currently there is no good solution for Go 1.11 to manage global vs local tools
-# we just use the "easy" way for now. People have to update this manually if they need a newer version
-# see https://github.com/golang/go/issues/24250 , https://github.com/golang/go/issues/25922 and https://github.com/golang/go/issues/27653
-# another option is https://github.com/twitchtv/retool but that is another dependancy that makes things more complex
-.install-revive:
-	which revive >/dev/null 2>&1 || GO111MODULE=off go get -u github.com/remerge/revive
-
-.install-reflex:
-	which rexlex >/dev/null 2>&1 || GO111MODULE=off go get -u github.com/cespare/reflex
