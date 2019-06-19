@@ -46,6 +46,9 @@ jobs:
           command: make lint
       - run:
           name: Test
+          command: make test-nocache
+      - run:
+          name: Test with race detector
           command: make race-nocache
       - when:
           condition: << parameters.build_and_upload >>
