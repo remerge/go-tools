@@ -4,31 +4,14 @@ clean::
 
 # Buidling binaries
 
-CI_COMMIT := $(CIRCLE_SHA1)
-CI_REPO := $(CIRCLE_PROJECT_REPONAME)
-CI_NUM := $(CIRCLE_BUILD_NUM)
+# local development fallbacks if there are no CI variables
+DEV_COMMIT := dev.$(shell whoami).$(shell git rev-parse --short HEAD)
+DEV_REPO := $(PACKAGE)
+DEV_NUM := $(shell whoami)
 
-# backwards compatibility with Travis CI
-ifndef CI_COMMIT
-override CI_COMMIT := $(TRAVIS_COMMIT)
-endif
-ifndef CI_REPO
-override CI_REPO := $(TRAVIS_REPO_SLUG)
-endif
-ifndef CI_NUM
-override CI_NUM := $(TRAVIS_JOB_NUMBER)
-endif
-
-# local development fallbacks
-ifndef CI_COMMIT
-override CI_COMMIT := dev.$(shell whoami).$(shell git rev-parse --short HEAD)
-endif
-ifndef CI_REPO
-override CI_REPO := $(PACKAGE)
-endif
-ifndef CI_NUM
-override CI_NUM := $(shell whoami)
-endif
+CI_COMMIT := $(or $(CIRCLE_SHA1), $(TRAVIS_COMMIT), $(DEV_COMMIT))
+CI_REPO := $(or $(CIRCLE_PROJECT_REPONAME), $(TRAVIS_REPO_SLUG), $(DEV_REPO))
+CI_NUM := $(or $(CIRCLE_BUILD_NUM), $(TRAVIS_JOB_NUMBER), $(DEV_NUM))
 
 LDIMPORT=github.com/remerge/go-service
 LDFLAGS=-X $(LDIMPORT).CodeVersion=$(CI_COMMIT) -X $(LDIMPORT).CodeBuild=$(CI_REPO)\#$(CI_NUM)@$(shell date -u +%FT%TZ)
