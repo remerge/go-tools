@@ -1,25 +1,25 @@
-// line 1 "uuid_fsm.rl"
+//line uuid_fsm.rl:1
 package uuid
 
-// line 7 "uuid_fsm.go"
+//line uuid_fsm.go:7
 const uuidRegex_start int = 1
 const uuidRegex_first_final int = 37
 const uuidRegex_error int = 0
 
 const uuidRegex_en_main int = 1
 
-// line 6 "uuid_fsm.rl"
+//line uuid_fsm.rl:6
 
 func matchUuidRegex(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	eof := pe
 
-	// line 22 "uuid_fsm.go"
+//line uuid_fsm.go:22
 	{
 		cs = uuidRegex_start
 	}
 
-	// line 27 "uuid_fsm.go"
+//line uuid_fsm.go:27
 	{
 		if p == pe {
 			goto _test_eof
@@ -831,10 +831,9 @@ func matchUuidRegex(data string) bool {
 		if p == eof {
 			switch cs {
 			case 37:
-				// line 12 "uuid_fsm.rl"
-
+//line uuid_fsm.rl:12
 				return true
-				// line 768 "uuid_fsm.go"
+//line uuid_fsm.go:767
 			}
 		}
 
@@ -843,30 +842,30 @@ func matchUuidRegex(data string) bool {
 		}
 	}
 
-	// line 15 "uuid_fsm.rl"
+//line uuid_fsm.rl:15
 
 	return false
 }
 
-// line 781 "uuid_fsm.go"
+//line uuid_fsm.go:780
 const uuidRegexiOS_start int = 1
 const uuidRegexiOS_first_final int = 37
 const uuidRegexiOS_error int = 0
 
 const uuidRegexiOS_en_main int = 1
 
-// line 22 "uuid_fsm.rl"
+//line uuid_fsm.rl:22
 
 func matchUuidRegexiOS(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	eof := pe
 
-	// line 796 "uuid_fsm.go"
+//line uuid_fsm.go:795
 	{
 		cs = uuidRegexiOS_start
 	}
 
-	// line 801 "uuid_fsm.go"
+//line uuid_fsm.go:800
 	{
 		if p == pe {
 			goto _test_eof
@@ -1554,10 +1553,9 @@ func matchUuidRegexiOS(data string) bool {
 		if p == eof {
 			switch cs {
 			case 37:
-				// line 28 "uuid_fsm.rl"
-
+//line uuid_fsm.rl:28
 				return true
-				// line 1418 "uuid_fsm.go"
+//line uuid_fsm.go:1416
 			}
 		}
 
@@ -1566,30 +1564,30 @@ func matchUuidRegexiOS(data string) bool {
 		}
 	}
 
-	// line 31 "uuid_fsm.rl"
+//line uuid_fsm.rl:31
 
 	return false
 }
 
-// line 1431 "uuid_fsm.go"
+//line uuid_fsm.go:1429
 const uuidRegexAndroid_start int = 1
 const uuidRegexAndroid_first_final int = 37
 const uuidRegexAndroid_error int = 0
 
 const uuidRegexAndroid_en_main int = 1
 
-// line 38 "uuid_fsm.rl"
+//line uuid_fsm.rl:38
 
 func matchUuidRegexAndroid(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	eof := pe
 
-	// line 1446 "uuid_fsm.go"
+//line uuid_fsm.go:1444
 	{
 		cs = uuidRegexAndroid_start
 	}
 
-	// line 1451 "uuid_fsm.go"
+//line uuid_fsm.go:1449
 	{
 		if p == pe {
 			goto _test_eof
@@ -2277,10 +2275,9 @@ func matchUuidRegexAndroid(data string) bool {
 		if p == eof {
 			switch cs {
 			case 37:
-				// line 44 "uuid_fsm.rl"
-
+//line uuid_fsm.rl:44
 				return true
-				// line 2068 "uuid_fsm.go"
+//line uuid_fsm.go:2065
 			}
 		}
 
@@ -2289,7 +2286,7 @@ func matchUuidRegexAndroid(data string) bool {
 		}
 	}
 
-	// line 47 "uuid_fsm.rl"
+//line uuid_fsm.rl:47
 
 	return false
 }

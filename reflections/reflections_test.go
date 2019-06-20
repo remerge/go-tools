@@ -1,6 +1,9 @@
 package reflections
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 type Test struct {
 	A string
@@ -13,47 +16,38 @@ type r struct {
 	accessor    string
 	expected    interface{}
 	shouldError bool
+	kind        reflect.Kind
 }
 
-func TestGetStringField(t *testing.T) {
+func TestGetValue(t *testing.T) {
 	o := Test{
 		A: "hallo",
-	}
-	for _, check := range []r{
-		r{o, "A", "hallo", false},
-		r{&o, "A", "hallo", false},
-		r{o, "B", "", true},
-		r{o, "C", "", true},
-		r{"asdf", "C", "", true},
-	} {
-		v, err := GetString(check.object, check.accessor)
-		if err == nil {
-			if v != check.expected.(string) {
-				t.Errorf("value mismatch: expected:%s got:%s", check.expected, v)
-				continue
-			}
-			continue
-		}
-		if !check.shouldError {
-			t.Errorf("error where no error was expected: %v", err)
-		}
-	}
-}
-func TestGetStringBool(t *testing.T) {
-	o := Test{
 		B: true,
+		C: 42,
 	}
 	for _, check := range []r{
-		r{o, "B", true, false},
-		r{&o, "B", true, false},
-		r{&o, "A", "hallo", true},
-		r{o, "A", "hallo", true},
-		r{o, "C", "", true},
-		r{"asdf", "C", "", true},
+		{o, "A", "hallo", false, reflect.String},
+		{&o, "A", "hallo", false, reflect.String},
+		{o, "B", "", true, reflect.String},
+		{o, "C", "", true, reflect.String},
+		{"asdf", "C", "", true, reflect.String},
+
+		{o, "B", true, false, reflect.Bool},
+		{&o, "B", true, false, reflect.Bool},
+		{&o, "A", "hallo", true, reflect.Bool},
+		{o, "A", "hallo", true, reflect.Bool},
+		{o, "C", "", true, reflect.Bool},
+		{"asdf", "C", "", true, reflect.Bool},
+
+		{o, "C", 42, false, reflect.Int},
+		{&o, "C", 42, false, reflect.Int},
+		{o, "B", "", true, reflect.Int},
+		{o, "A", "", true, reflect.Int},
+		{"asdf", "C", "", true, reflect.Int},
 	} {
-		v, err := GetBool(check.object, check.accessor)
+		v, err := GetValue(check.object, check.accessor, check.kind)
 		if err == nil {
-			if v != check.expected.(bool) {
+			if !reflect.DeepEqual(v, check.expected) {
 				t.Errorf("value mismatch: expected:%v got:%v", check.expected, v)
 				continue
 			}
@@ -63,5 +57,4 @@ func TestGetStringBool(t *testing.T) {
 			t.Errorf("error where no error was expected: %v", err)
 		}
 	}
-
 }

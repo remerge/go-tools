@@ -24,15 +24,15 @@ func langByte(in byte) (out byte, ok bool) {
 		return in, true
 	}
 	if isByteUppercase(in) {
-		return in+32, true
+		return in + 32, true
 	}
 	return 0, false
 }
 
-func isByteLowercase(in byte) bool  {
+func isByteLowercase(in byte) bool {
 	return in > 96 && in < 123
 }
 
-func isByteUppercase(in byte) bool  {
+func isByteUppercase(in byte) bool {
 	return in > 64 && in < 91
 }

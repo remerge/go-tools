@@ -1,24 +1,24 @@
-// line 1 "os_fsm.rl"
+//line os_fsm.rl:1
 package normalize
 
-// line 7 "os_fsm.go"
+//line os_fsm.go:7
 const os_ios_start int = 0
 const os_ios_first_final int = 8
 const os_ios_error int = -1
 
 const os_ios_en_main int = 0
 
-// line 6 "os_fsm.rl"
+//line os_fsm.rl:6
 
 func MatchOsiOS(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-	// line 21 "os_fsm.go"
+//line os_fsm.go:21
 	{
 		cs = os_ios_start
 	}
 
-	// line 26 "os_fsm.go"
+//line os_fsm.go:26
 	{
 		if p == pe {
 			goto _test_eof
@@ -93,8 +93,7 @@ func MatchOsiOS(data string) bool {
 		}
 		goto st0
 	tr4:
-		// line 11 "os_fsm.rl"
-
+//line os_fsm.rl:11
 		return true
 		goto st8
 	st8:
@@ -102,7 +101,7 @@ func MatchOsiOS(data string) bool {
 			goto _test_eof8
 		}
 	st_case_8:
-		// line 110 "os_fsm.go"
+//line os_fsm.go:109
 		switch data[p] {
 		case 73:
 			goto st1
@@ -232,29 +231,29 @@ func MatchOsiOS(data string) bool {
 		}
 	}
 
-	// line 14 "os_fsm.rl"
+//line os_fsm.rl:14
 
 	return false
 }
 
-// line 226 "os_fsm.go"
+//line os_fsm.go:225
 const os_android_start int = 0
 const os_android_first_final int = 7
 const os_android_error int = -1
 
 const os_android_en_main int = 0
 
-// line 21 "os_fsm.rl"
+//line os_fsm.rl:21
 
 func MatchOsAndroid(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-	// line 240 "os_fsm.go"
+//line os_fsm.go:239
 	{
 		cs = os_android_start
 	}
 
-	// line 245 "os_fsm.go"
+//line os_fsm.go:244
 	{
 		if p == pe {
 			goto _test_eof
@@ -387,8 +386,7 @@ func MatchOsAndroid(data string) bool {
 		}
 		goto st0
 	tr7:
-		// line 26 "os_fsm.rl"
-
+//line os_fsm.rl:26
 		return true
 		goto st7
 	st7:
@@ -396,7 +394,7 @@ func MatchOsAndroid(data string) bool {
 			goto _test_eof7
 		}
 	st_case_7:
-		// line 387 "os_fsm.go"
+//line os_fsm.go:385
 		switch data[p] {
 		case 65:
 			goto st1
@@ -435,7 +433,7 @@ func MatchOsAndroid(data string) bool {
 		}
 	}
 
-	// line 29 "os_fsm.rl"
+//line os_fsm.rl:29
 
 	return false
 }

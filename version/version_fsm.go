@@ -1,14 +1,14 @@
-// line 1 "version_fsm.rl"
+//line version_fsm.rl:1
 package version
 
-// line 7 "version_fsm.go"
+//line version_fsm.go:7
 const version_parser_start int = 1
 const version_parser_first_final int = 6
 const version_parser_error int = 0
 
 const version_parser_en_main int = 1
 
-// line 6 "version_fsm.rl"
+//line version_fsm.rl:6
 
 func Parse(data string) *Version {
 	version := &Version{}
@@ -19,12 +19,12 @@ func Parse(data string) *Version {
 
 	cs, p, pe := 0, 0, len(data)
 
-	// line 28 "version_fsm.go"
+//line version_fsm.go:28
 	{
 		cs = version_parser_start
 	}
 
-	// line 33 "version_fsm.go"
+//line version_fsm.go:33
 	{
 		if p == pe {
 			goto _test_eof
@@ -56,8 +56,7 @@ func Parse(data string) *Version {
 		}
 		goto st1
 	tr1:
-		// line 18 "version_fsm.rl"
-
+//line version_fsm.rl:18
 		version.Major = version.Major*10 + (int(data[p]) - '0')
 		goto st2
 	st2:
@@ -65,7 +64,7 @@ func Parse(data string) *Version {
 			goto _test_eof2
 		}
 	st_case_2:
-		// line 74 "version_fsm.go"
+//line version_fsm.go:73
 		switch data[p] {
 		case 46:
 			goto st3
@@ -90,8 +89,7 @@ func Parse(data string) *Version {
 		}
 		goto st0
 	tr4:
-		// line 19 "version_fsm.rl"
-
+//line version_fsm.rl:19
 		version.Minor = version.Minor*10 + (int(data[p]) - '0')
 		goto st4
 	st4:
@@ -99,7 +97,7 @@ func Parse(data string) *Version {
 			goto _test_eof4
 		}
 	st_case_4:
-		// line 108 "version_fsm.go"
+//line version_fsm.go:106
 		switch data[p] {
 		case 46:
 			goto st5
@@ -120,8 +118,7 @@ func Parse(data string) *Version {
 		}
 		goto st0
 	tr6:
-		// line 20 "version_fsm.rl"
-
+//line version_fsm.rl:20
 		version.Patch = version.Patch*10 + (int(data[p]) - '0')
 		goto st6
 	st6:
@@ -129,7 +126,7 @@ func Parse(data string) *Version {
 			goto _test_eof6
 		}
 	st_case_6:
-		// line 138 "version_fsm.go"
+//line version_fsm.go:135
 		if 48 <= data[p] && data[p] <= 57 {
 			goto tr6
 		}
@@ -162,7 +159,7 @@ func Parse(data string) *Version {
 		}
 	}
 
-	// line 24 "version_fsm.rl"
+//line version_fsm.rl:24
 
 	// remove some insane versions
 	if version.Major > 1000000 || version.Major < 0 {

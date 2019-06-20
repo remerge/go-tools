@@ -1,14 +1,14 @@
-// line 1 "app_id_fsm.rl"
+//line app_id_fsm.rl:1
 package normalize
 
-// line 7 "app_id_fsm.go"
+//line app_id_fsm.go:7
 const app_id_start int = 1
 const app_id_first_final int = 4
 const app_id_error int = 0
 
 const app_id_en_main int = 1
 
-// line 6 "app_id_fsm.rl"
+//line app_id_fsm.rl:6
 
 func AppId(data string) string {
 	cs, p, pe := 0, 0, len(data)
@@ -17,12 +17,12 @@ func AppId(data string) string {
 	// if we can't match an iOS ID we return the ref as-is
 	ref := data
 
-	// line 26 "app_id_fsm.go"
+//line app_id_fsm.go:26
 	{
 		cs = app_id_start
 	}
 
-	// line 31 "app_id_fsm.go"
+//line app_id_fsm.go:31
 	{
 		if p == pe {
 			goto _test_eof
@@ -53,8 +53,7 @@ func AppId(data string) string {
 		cs = 0
 		goto _out
 	tr0:
-		// line 16 "app_id_fsm.rl"
-
+//line app_id_fsm.rl:16
 		mark = p
 		goto st4
 	st4:
@@ -62,7 +61,7 @@ func AppId(data string) string {
 			goto _test_eof4
 		}
 	st_case_4:
-		// line 71 "app_id_fsm.go"
+//line app_id_fsm.go:70
 		if 48 <= data[p] && data[p] <= 57 {
 			goto st4
 		}
@@ -102,10 +101,9 @@ func AppId(data string) string {
 		if p == eof {
 			switch cs {
 			case 4:
-				// line 17 "app_id_fsm.rl"
-
+//line app_id_fsm.rl:17
 				ref = data[mark:p]
-				// line 106 "app_id_fsm.go"
+//line app_id_fsm.go:104
 			}
 		}
 
@@ -114,7 +112,7 @@ func AppId(data string) string {
 		}
 	}
 
-	// line 21 "app_id_fsm.rl"
+//line app_id_fsm.rl:21
 
 	return ref
 }

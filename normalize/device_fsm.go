@@ -1,24 +1,24 @@
-// line 1 "device_fsm.rl"
+//line device_fsm.rl:1
 package normalize
 
-// line 7 "device_fsm.go"
+//line device_fsm.go:7
 const device_ipod_start int = 0
 const device_ipod_first_final int = 4
 const device_ipod_error int = -1
 
 const device_ipod_en_main int = 0
 
-// line 6 "device_fsm.rl"
+//line device_fsm.rl:6
 
 func MatchDeviceiPod(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-	// line 21 "device_fsm.go"
+//line device_fsm.go:21
 	{
 		cs = device_ipod_start
 	}
 
-	// line 26 "device_fsm.go"
+//line device_fsm.go:26
 	{
 		if p == pe {
 			goto _test_eof
@@ -97,8 +97,7 @@ func MatchDeviceiPod(data string) bool {
 		}
 		goto st0
 	tr4:
-		// line 11 "device_fsm.rl"
-
+//line device_fsm.rl:11
 		return true
 		goto st4
 	st4:
@@ -106,7 +105,7 @@ func MatchDeviceiPod(data string) bool {
 			goto _test_eof4
 		}
 	st_case_4:
-		// line 114 "device_fsm.go"
+//line device_fsm.go:113
 		switch data[p] {
 		case 73:
 			goto st1
@@ -136,29 +135,29 @@ func MatchDeviceiPod(data string) bool {
 		}
 	}
 
-	// line 14 "device_fsm.rl"
+//line device_fsm.rl:14
 
 	return false
 }
 
-// line 138 "device_fsm.go"
+//line device_fsm.go:137
 const device_ipad_start int = 0
 const device_ipad_first_final int = 4
 const device_ipad_error int = -1
 
 const device_ipad_en_main int = 0
 
-// line 21 "device_fsm.rl"
+//line device_fsm.rl:21
 
 func MatchDeviceiPad(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-	// line 152 "device_fsm.go"
+//line device_fsm.go:151
 	{
 		cs = device_ipad_start
 	}
 
-	// line 157 "device_fsm.go"
+//line device_fsm.go:156
 	{
 		if p == pe {
 			goto _test_eof
@@ -237,8 +236,7 @@ func MatchDeviceiPad(data string) bool {
 		}
 		goto st0
 	tr4:
-		// line 26 "device_fsm.rl"
-
+//line device_fsm.rl:26
 		return true
 		goto st4
 	st4:
@@ -246,7 +244,7 @@ func MatchDeviceiPad(data string) bool {
 			goto _test_eof4
 		}
 	st_case_4:
-		// line 245 "device_fsm.go"
+//line device_fsm.go:243
 		switch data[p] {
 		case 73:
 			goto st1
@@ -276,29 +274,29 @@ func MatchDeviceiPad(data string) bool {
 		}
 	}
 
-	// line 29 "device_fsm.rl"
+//line device_fsm.rl:29
 
 	return false
 }
 
-// line 269 "device_fsm.go"
+//line device_fsm.go:267
 const device_iphone_start int = 0
 const device_iphone_first_final int = 6
 const device_iphone_error int = -1
 
 const device_iphone_en_main int = 0
 
-// line 36 "device_fsm.rl"
+//line device_fsm.rl:36
 
 func MatchDeviceiPhone(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-	// line 283 "device_fsm.go"
+//line device_fsm.go:281
 	{
 		cs = device_iphone_start
 	}
 
-	// line 288 "device_fsm.go"
+//line device_fsm.go:286
 	{
 		if p == pe {
 			goto _test_eof
@@ -413,8 +411,7 @@ func MatchDeviceiPhone(data string) bool {
 		}
 		goto st0
 	tr6:
-		// line 41 "device_fsm.rl"
-
+//line device_fsm.rl:41
 		return true
 		goto st6
 	st6:
@@ -422,7 +419,7 @@ func MatchDeviceiPhone(data string) bool {
 			goto _test_eof6
 		}
 	st_case_6:
-		// line 412 "device_fsm.go"
+//line device_fsm.go:409
 		switch data[p] {
 		case 73:
 			goto st1
@@ -458,7 +455,7 @@ func MatchDeviceiPhone(data string) bool {
 		}
 	}
 
-	// line 44 "device_fsm.rl"
+//line device_fsm.rl:44
 
 	return false
 }
