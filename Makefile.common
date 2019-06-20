@@ -1,5 +1,5 @@
-
-PROJECT ?= $(notdir $(patsubst %/,%,$(CURDIR)))
+# CircleCI checks out projects into ~/project, so use the repo name instead
+PROJECT ?= $(or $(CIRCLE_PROJECT_REPONAME), $(notdir $(patsubst %/,%,$(CURDIR))))
 PACKAGE ?= github.com/remerge/$(PROJECT)
 MKF_PREFIX ?= mkf
 

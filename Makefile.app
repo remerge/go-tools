@@ -4,13 +4,17 @@ clean::
 
 # Buidling binaries
 
-TRAVIS_COMMIT ?= dev.$(shell whoami).$(shell git rev-parse --short HEAD)
-TRAVIS_REPO_SLUG ?= $(PACKAGE)
-TRAVIS_JOB_NUMBER ?= $(shell whoami)
+# local development fallbacks if there are no CI variables
+DEV_COMMIT := dev.$(shell whoami).$(shell git rev-parse --short HEAD)
+DEV_REPO := $(PACKAGE)
+DEV_NUM := $(shell whoami)
+
+CI_COMMIT := $(or $(CIRCLE_SHA1), $(TRAVIS_COMMIT), $(DEV_COMMIT))
+CI_REPO := $(or $(CIRCLE_PROJECT_REPONAME), $(TRAVIS_REPO_SLUG), $(DEV_REPO))
+CI_NUM := $(or $(CIRCLE_BUILD_NUM), $(TRAVIS_JOB_NUMBER), $(DEV_NUM))
 
 LDIMPORT=github.com/remerge/go-service
-LDFLAGS=-X $(LDIMPORT).CodeVersion=$(TRAVIS_COMMIT) -X $(LDIMPORT).CodeBuild=$(TRAVIS_REPO_SLUG)\#$(TRAVIS_JOB_NUMBER)@$(shell date -u +%FT%TZ)
-
+LDFLAGS=-X $(LDIMPORT).CodeVersion=$(CI_COMMIT) -X $(LDIMPORT).CodeBuild=$(CI_REPO)\#$(CI_NUM)@$(shell date -u +%FT%TZ)
 MAIN ?= main
 
 # NOTE: logically pull out binaries from source tree
