@@ -10,16 +10,9 @@ executors:
         aws_auth:
           aws_access_key_id: $DOCKER_KEY
           aws_secret_access_key: $DOCKER_SECRET
-        # Environment variables passed into the container. Useful for hostnames, ports...
-        # environment:
-        #   TEST_DB_HOST: postgres
-      # Additional images needed for testing go here. See for config options:
-      # https://circleci.com/docs/2.0/configuration-reference/#docker
-      # - image: postgres
-      #   name: postgres
 
 jobs:
-  test_build:
+  test-build:
     parameters:
       build_and_upload:
         type: boolean
@@ -68,26 +61,24 @@ jobs:
 
 workflows:
   version: 2
-  workflow:
+  # DELETE either the "Go app" or "Go library" workflow
+  "Go app":
     jobs:
-      # DELETE either the service or library part:
-      
-      # jobs for libraries:
-      - test_build:
-          build_and_upload: false
-
-      # jobs for services:
-      - test_build:
+      - test-build:
           build_and_upload: false
           filters:
             branches:
               ignore:
                 - master
                 - production
-      - test_build:
+      - test-build:
           build_and_upload: true
           filters:
             branches:
               only:
                 - master
                 - production
+  "Go library":
+    jobs:
+      - test-build:
+          build_and_upload: false

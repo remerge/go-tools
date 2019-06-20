@@ -195,11 +195,13 @@ Afterwards `mkf/Makefile.common` can be included in the parent project. If the p
 * **app** (`Makefile.app`): common targets for building binaries and deploy them
 * **divert** (`Makefile.divert`) for deploying temporarly deploying development binaries to production
 
-#### Example
+### Example top level Makefile
 
-    REVIVELINTER_EXCLUDES = $(foreach p,$(wildcard **/*_fsm.go),-exclude $(p))
-    include mkf/Makefile.common mkf/Makefile.app
+```Makefile
+REVIVELINTER_EXCLUDES = $(foreach p,$(wildcard **/*_fsm.go),-exclude $(p))
 
+include mkf/Makefile.common mkf/Makefile.app mkf/Makefile.divert
+```
 
 ## Updating
 
@@ -211,3 +213,7 @@ To update the Makefile includes in the current repository.
 ## Travis CI configuration
 
 Every project should have a Travis CI configuration. [This example can be used as a starting point.](https://github.com/remerge/go-makefile/blob/master/travis.yaml)
+
+## CircleCI configuration
+
+To setup a project for CirlceCI please read the [Setup CircleCI guide in Confluence](https://remerge.atlassian.net/wiki/spaces/tech/pages/4030889/Creating+a+new+Go+project). This uses the config file in the `.circleci` folder as a starting point.
