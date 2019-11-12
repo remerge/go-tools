@@ -10,7 +10,7 @@ import (
 
 const (
 	initializationVectorSize = 16
-	integritySignatureSize = 4
+	integritySignatureSize   = 4
 )
 
 func DecryptHmacXorWithIntegrity(message, encryptKey, integrityKey []byte) ([]byte, error) {
