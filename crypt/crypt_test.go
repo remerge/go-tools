@@ -1,10 +1,7 @@
-package dm
+package crypt
 
 import (
-	"crypto/hmac"
-	"crypto/sha1"
 	"crypto/sha256"
-	"hash"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -32,46 +29,10 @@ func TestDecryptHmacXorWithIntegrity(t *testing.T) {
 		0x77, 0x92,
 	}
 
-	cryptHmacXorWithIntegrity := func(t *testing.T, h func() hash.Hash, bytes []byte) []byte {
-		var err error
-
-		// use a static initializationVector for convenience
-		initializationVector := []byte{0, 0, 1, 110, 65, 7, 32, 164, 237, 81, 61, 16, 7, 160, 157, 181}
-
-		// create cipher text
-		padMac := hmac.New(h, testEncryptionKeys)
-		_, err = padMac.Write(initializationVector)
-		require.NoError(t, err)
-
-		pad := padMac.Sum(nil)
-		ciphered := make([]byte, len(bytes))
-
-		for i := 0; i < len(bytes); i++ {
-			ciphered[i] = pad[i] ^ bytes[i]
-		}
-
-		// create signature
-		sigMac := hmac.New(h, testIntegrityKeys)
-		_, err = sigMac.Write(bytes)
-		require.NoError(t, err)
-
-		_, err = sigMac.Write(initializationVector)
-		require.NoError(t, err)
-
-		signature := sigMac.Sum(nil)[0:4]
-
-		// create message
-		var message []byte
-		message = append(message, initializationVector...)
-		message = append(message, ciphered...)
-		message = append(message, signature...)
-
-		return message
-	}
-
 	t.Run("check encryption and decryption", func(t *testing.T) {
 		bytes := []byte{0, 0, 0, 24, 255, 22, 1, 120}
-		cryptMsg := cryptHmacXorWithIntegrity(t, sha1.New, bytes)
+		cryptMsg, err := CryptHmacXorWithIntegrity(bytes, testEncryptionKeys, testIntegrityKeys)
+		require.NoError(t, err)
 
 		result, err := DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
 		require.NoError(t, err)
@@ -82,7 +43,8 @@ func TestDecryptHmacXorWithIntegrity(t *testing.T) {
 		bytes := []byte{0, 145, 0, 0, 0, 0, 0, 120, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 17} // 20 bytes
 		require.Len(t, bytes, 20)
 
-		cryptMsg := cryptHmacXorWithIntegrity(t, sha1.New, bytes)
+		cryptMsg, err := CryptHmacXorWithIntegrity(bytes, testEncryptionKeys, testIntegrityKeys)
+		require.NoError(t, err)
 
 		result, err := DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
 		require.NoError(t, err)
@@ -95,9 +57,10 @@ func TestDecryptHmacXorWithIntegrity(t *testing.T) {
 
 		// sha1 give a 20 byte pad --> can't build a cipher text longer than 20 bytes
 		// sha256 give a 32 byte long pad --> can build it with a 21 byte array
-		cryptMsg := cryptHmacXorWithIntegrity(t, sha256.New, bytes)
+		cryptMsg, err := cryptHmacXorWithIntegrity(bytes, sha256.New, testEncryptionKeys, testIntegrityKeys)
+		require.NoError(t, err)
 
-		_, err := DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
+		_, err = DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "pad length to short") // the error is not because of the wrong hash function
 	})
