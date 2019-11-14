@@ -12,8 +12,11 @@ cache:
 before_install:
 - git config --global url.git@github.com:.insteadof https://github.com/
 
+install:
+- make mod-tidy
+
 script:
-- make test
+- make lint test
 
 branches:
   only:
