@@ -13,7 +13,7 @@ before_install:
 - git config --global url.git@github.com:.insteadof https://github.com/
 
 script:
-- make lint test
+- make test
 
 branches:
   only:
