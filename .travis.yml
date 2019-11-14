@@ -1,7 +1,7 @@
 sudo: false
 language: go
 go:
-- "1.13.1"
+- "1.11.6"
 
 cache:
   directories:
@@ -16,7 +16,7 @@ install:
 - make mod-tidy
 
 script:
-- make lint test
+- make test
 
 branches:
   only:
