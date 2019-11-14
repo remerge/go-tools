@@ -82,7 +82,7 @@ Watch your Go code for changes, rebuild and run test on change.
 
 # Linting
 
-This target lints the source code using various tools: `go fmt`, the modules consistency check, `go check`, `go vet` and `revive`.
+This target lints the source code using various tools: `go fmt`, `goimports`, the modules consistency check, `go check`, `go vet` and `revive`.
 
     make lint
 
@@ -109,6 +109,15 @@ Use `REVIVELINTER_EXCLUDES` variable to add excludes.
 
 ```
 REVIVELINTER_EXCLUDES = $(foreach p,$(wildcard **/*_fsm.go),-exclude $(p))
+include mkf/Makefile.common
+```
+
+## gofmt and goimports configuration
+
+Use `GOFMT_EXCLUDES` variable to exclude files from import checking.
+
+```
+GOFMT_EXCLUDES = -not -path "./vendor/*"
 include mkf/Makefile.common
 ```
 
