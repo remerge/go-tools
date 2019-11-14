@@ -85,7 +85,7 @@ func TestDecryptHmacXorWithIntegrity(t *testing.T) {
 
 			result, err := DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
 			require.NoError(t, err)
-			assert.EqualValues(t, bytes, result)
+			assert.Empty(t, result)
 		})
 	})
 
