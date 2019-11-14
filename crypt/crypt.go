@@ -11,10 +11,15 @@ import (
 const (
 	initializationVectorSize = 16
 	integritySignatureSize   = 4
+	minimalMessageSize       = initializationVectorSize + integritySignatureSize
 )
 
 func DecryptHmacXorWithIntegrity(message, encryptKey, integrityKey []byte) ([]byte, error) {
 	size := len(message)
+	if size < minimalMessageSize {
+		return nil, fmt.Errorf("message length to short(<%d), message: %v, message-size: %d", minimalMessageSize, message, len(message))
+	}
+
 	initializationVector := message[0:initializationVectorSize]
 	cipherText := message[initializationVectorSize : size-integritySignatureSize]
 	cipherTextSize := len(cipherText)

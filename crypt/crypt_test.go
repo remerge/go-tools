@@ -29,39 +29,64 @@ func TestDecryptHmacXorWithIntegrity(t *testing.T) {
 		0x77, 0x92,
 	}
 
-	t.Run("check encryption and decryption", func(t *testing.T) {
-		bytes := []byte{0, 0, 0, 24, 255, 22, 1, 120}
-		cryptMsg, err := CryptHmacXorWithIntegrity(bytes, testEncryptionKeys, testIntegrityKeys)
-		require.NoError(t, err)
+	t.Run("check pad lenght", func(t *testing.T) {
+		t.Run("check encryption and decryption", func(t *testing.T) {
+			bytes := []byte{0, 0, 0, 24, 255, 22, 1, 120}
+			cryptMsg, err := CryptHmacXorWithIntegrity(bytes, testEncryptionKeys, testIntegrityKeys)
+			require.NoError(t, err)
 
-		result, err := DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
-		require.NoError(t, err)
-		assert.EqualValues(t, bytes, result)
+			result, err := DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
+			require.NoError(t, err)
+			assert.EqualValues(t, bytes, result)
+		})
+
+		t.Run("check encryption and decryption with 20 byte", func(t *testing.T) {
+			bytes := []byte{0, 145, 0, 0, 0, 0, 0, 120, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 17} // 20 bytes
+			require.Len(t, bytes, 20)
+
+			cryptMsg, err := CryptHmacXorWithIntegrity(bytes, testEncryptionKeys, testIntegrityKeys)
+			require.NoError(t, err)
+
+			result, err := DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
+			require.NoError(t, err)
+			assert.EqualValues(t, bytes, result)
+		})
+
+		t.Run("check encryption and decryption with 21 byte", func(t *testing.T) {
+			bytes := []byte{0, 0, 0, 234, 0, 0, 0, 120, 0, 0, 6, 0, 0, 0, 10, 0, 0, 0, 11, 0, 12} // 21 bytes
+			require.Len(t, bytes, 21)
+
+			// sha1 give a 20 byte pad --> can't build a cipher text longer than 20 bytes
+			// sha256 give a 32 byte long pad --> can build it with a 21 byte array
+			cryptMsg, err := cryptHmacXorWithIntegrity(bytes, sha256.New, testEncryptionKeys, testIntegrityKeys)
+			require.NoError(t, err)
+
+			_, err = DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
+			assert.Error(t, err)
+			assert.Contains(t, err.Error(), "pad length to short") // the error is not because of the wrong hash function
+		})
 	})
 
-	t.Run("check encryption and decryption with 20 byte", func(t *testing.T) {
-		bytes := []byte{0, 145, 0, 0, 0, 0, 0, 120, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 17} // 20 bytes
-		require.Len(t, bytes, 20)
+	t.Run("check message length", func(t *testing.T) {
+		t.Run("message to short", func(t *testing.T) {
+			cryptMsg := []byte{0, 0, 0, 24, 255, 22, 1, 120}
+			require.True(t, len(cryptMsg) < minimalMessageSize)
 
-		cryptMsg, err := CryptHmacXorWithIntegrity(bytes, testEncryptionKeys, testIntegrityKeys)
-		require.NoError(t, err)
+			_, err := DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
+			assert.Error(t, err)
+			assert.Contains(t, err.Error(), "message length to short")
+		})
 
-		result, err := DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
-		require.NoError(t, err)
-		assert.EqualValues(t, bytes, result)
+		t.Run("minimal message length", func(t *testing.T) {
+			bytes := make([]byte, 0)
+			cryptMsg, err := CryptHmacXorWithIntegrity(bytes, testEncryptionKeys, testIntegrityKeys)
+			require.NoError(t, err)
+			require.Len(t, cryptMsg, minimalMessageSize)
+
+			result, err := DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
+			require.NoError(t, err)
+			assert.EqualValues(t, bytes, result)
+		})
 	})
 
-	t.Run("check encryption and decryption with 21 byte", func(t *testing.T) {
-		bytes := []byte{0, 0, 0, 234, 0, 0, 0, 120, 0, 0, 6, 0, 0, 0, 10, 0, 0, 0, 11, 0, 12} // 21 bytes
-		require.Len(t, bytes, 21)
-
-		// sha1 give a 20 byte pad --> can't build a cipher text longer than 20 bytes
-		// sha256 give a 32 byte long pad --> can build it with a 21 byte array
-		cryptMsg, err := cryptHmacXorWithIntegrity(bytes, sha256.New, testEncryptionKeys, testIntegrityKeys)
-		require.NoError(t, err)
-
-		_, err = DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
-		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "pad length to short") // the error is not because of the wrong hash function
-	})
 }
