@@ -342,7 +342,16 @@ func matchUuidRegex(data string) bool {
 			goto _test_eof15
 		}
 	st_case_15:
-		if data[p] == 52 {
+		switch {
+		case data[p] < 65:
+			if 48 <= data[p] && data[p] <= 57 {
+				goto st16
+			}
+		case data[p] > 70:
+			if 97 <= data[p] && data[p] <= 102 {
+				goto st16
+			}
+		default:
 			goto st16
 		}
 		goto st0
@@ -414,16 +423,13 @@ func matchUuidRegex(data string) bool {
 			goto _test_eof20
 		}
 	st_case_20:
-		if data[p] == 124 {
-			goto st21
-		}
 		switch {
 		case data[p] < 65:
-			if 56 <= data[p] && data[p] <= 57 {
+			if 48 <= data[p] && data[p] <= 57 {
 				goto st21
 			}
-		case data[p] > 66:
-			if 97 <= data[p] && data[p] <= 98 {
+		case data[p] > 70:
+			if 97 <= data[p] && data[p] <= 102 {
 				goto st21
 			}
 		default:
@@ -833,7 +839,7 @@ func matchUuidRegex(data string) bool {
 			case 37:
 //line uuid_fsm.rl:12
 				return true
-//line uuid_fsm.go:767
+//line uuid_fsm.go:773
 			}
 		}
 
@@ -847,7 +853,7 @@ func matchUuidRegex(data string) bool {
 	return false
 }
 
-//line uuid_fsm.go:780
+//line uuid_fsm.go:786
 const uuidRegexiOS_start int = 1
 const uuidRegexiOS_first_final int = 37
 const uuidRegexiOS_error int = 0
@@ -860,12 +866,12 @@ func matchUuidRegexiOS(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	eof := pe
 
-//line uuid_fsm.go:795
+//line uuid_fsm.go:801
 	{
 		cs = uuidRegexiOS_start
 	}
 
-//line uuid_fsm.go:800
+//line uuid_fsm.go:806
 	{
 		if p == pe {
 			goto _test_eof
@@ -1140,7 +1146,12 @@ func matchUuidRegexiOS(data string) bool {
 			goto _test_eof15
 		}
 	st_case_15:
-		if data[p] == 52 {
+		switch {
+		case data[p] > 57:
+			if 65 <= data[p] && data[p] <= 70 {
+				goto st16
+			}
+		case data[p] >= 48:
 			goto st16
 		}
 		goto st0
@@ -1555,7 +1566,7 @@ func matchUuidRegexiOS(data string) bool {
 			case 37:
 //line uuid_fsm.rl:28
 				return true
-//line uuid_fsm.go:1416
+//line uuid_fsm.go:1427
 			}
 		}
 
@@ -1569,7 +1580,7 @@ func matchUuidRegexiOS(data string) bool {
 	return false
 }
 
-//line uuid_fsm.go:1429
+//line uuid_fsm.go:1440
 const uuidRegexAndroid_start int = 1
 const uuidRegexAndroid_first_final int = 37
 const uuidRegexAndroid_error int = 0
@@ -1582,12 +1593,12 @@ func matchUuidRegexAndroid(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	eof := pe
 
-//line uuid_fsm.go:1444
+//line uuid_fsm.go:1455
 	{
 		cs = uuidRegexAndroid_start
 	}
 
-//line uuid_fsm.go:1449
+//line uuid_fsm.go:1460
 	{
 		if p == pe {
 			goto _test_eof
@@ -1862,7 +1873,12 @@ func matchUuidRegexAndroid(data string) bool {
 			goto _test_eof15
 		}
 	st_case_15:
-		if data[p] == 52 {
+		switch {
+		case data[p] > 57:
+			if 97 <= data[p] && data[p] <= 102 {
+				goto st16
+			}
+		case data[p] >= 48:
 			goto st16
 		}
 		goto st0
@@ -2277,7 +2293,7 @@ func matchUuidRegexAndroid(data string) bool {
 			case 37:
 //line uuid_fsm.rl:44
 				return true
-//line uuid_fsm.go:2065
+//line uuid_fsm.go:2081
 			}
 		}
 

@@ -14,17 +14,17 @@ func IsValidFast(uuid string) bool {
 
 // IsValid return true if uuid matches the UUID standard regexp
 func IsValid(uuid string) bool {
-	return IsValidFast(uuid) && matchUuidRegex(uuid)
+	return IsValidFast(uuid) && matchUuidRegex(uuid) && !isTest(uuid)
 }
 
 // IsiOS returns true if uuid matches the iOS specifc UUID regexp
 func IsiOS(uuid string) bool {
-	return IsValidFast(uuid) && matchUuidRegexiOS(uuid)
+	return IsValidFast(uuid) && matchUuidRegexiOS(uuid) && !isTest(uuid)
 }
 
 // IsAndroid returns true if uuid matches the Android specifc UUID regexp
 func IsAndroid(uuid string) bool {
-	return IsValidFast(uuid) && matchUuidRegexAndroid(uuid)
+	return IsValidFast(uuid) && matchUuidRegexAndroid(uuid) && !isTest(uuid)
 }
 
 func MatchesOS(expectedOS string, givenOS string, id string) bool {
@@ -41,4 +41,8 @@ func MatchesOS(expectedOS string, givenOS string, id string) bool {
 		return IsAndroid(id)
 	}
 	return true
+}
+
+func isTest(uuid string) bool {
+	return uuid == "00000000-0000-0000-0000-000000000000" || uuid == "ffffffff-ffff-ffff-ffff-ffffffffffff" || uuid == "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"
 }

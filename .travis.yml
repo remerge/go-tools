@@ -1,7 +1,7 @@
 sudo: false
 language: go
 go:
-- "1.11"
+- "1.11.13"
 
 cache:
   directories:
@@ -11,9 +11,6 @@ cache:
 
 before_install:
 - git config --global url.git@github.com:.insteadof https://github.com/
-
-install:
-- make dep
 
 script:
 - make test
