@@ -22,6 +22,7 @@ var uuids = []struct {
 	{"eD83F96D-D14E-4A81-8C7A-021DA055DEF5", true, true},
 	{"a4128ee3-5fd5-4359-bae4-6c03354f9a02", true, true},
 	{"28C1E1D8-7E76-4C57-A25A-4B8C81A3EB2A", true, true},
+	{"a824c967-771f-4630-a30d-389813424805", true, true},
 	{"eD83F96D-D14E-4A81-8C7A-021DA055DEF5F", false, false},
 }
 
