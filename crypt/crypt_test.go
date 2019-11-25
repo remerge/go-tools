@@ -63,7 +63,7 @@ func TestDecryptHmacXorWithIntegrity(t *testing.T) {
 
 			_, err = DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
 			assert.Error(t, err)
-			assert.Contains(t, err.Error(), "pad length to short") // the error is not because of the wrong hash function
+			assert.Contains(t, err.Error(), "pad length too short") // the error is not because of the wrong hash function
 		})
 	})
 
@@ -74,7 +74,7 @@ func TestDecryptHmacXorWithIntegrity(t *testing.T) {
 
 			_, err := DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)
 			assert.Error(t, err)
-			assert.Contains(t, err.Error(), "message length to short")
+			assert.Contains(t, err.Error(), "message length too short")
 		})
 
 		t.Run("minimal message length", func(t *testing.T) {
