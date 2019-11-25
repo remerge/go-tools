@@ -68,7 +68,7 @@ func TestDecryptHmacXorWithIntegrity(t *testing.T) {
 	})
 
 	t.Run("check message length", func(t *testing.T) {
-		t.Run("message to short", func(t *testing.T) {
+		t.Run("message too short", func(t *testing.T) {
 			cryptMsg := []byte{0, 0, 0, 24, 255, 22, 1, 120}
 			require.True(t, len(cryptMsg) < minimalMessageSize)
 
