@@ -17,7 +17,7 @@ const (
 func DecryptHmacXorWithIntegrity(message, encryptKey, integrityKey []byte) ([]byte, error) {
 	size := len(message)
 	if size < minimalMessageSize {
-		return nil, fmt.Errorf("message length to short(<%d), message: %v, message-size: %d", minimalMessageSize, message, len(message))
+		return nil, fmt.Errorf("message length too short(<%d), message: %v, length: %d", minimalMessageSize, message, len(message))
 	}
 
 	initializationVector := message[0:initializationVectorSize]
@@ -32,7 +32,7 @@ func DecryptHmacXorWithIntegrity(message, encryptKey, integrityKey []byte) ([]by
 
 	pad := mac.Sum(nil)
 	if len(pad) < cipherTextSize {
-		return nil, fmt.Errorf("pad length to short, pad: %v, pad-size: %d, message: %v, cipher-text-size: %d", pad, len(pad), message, len(cipherText))
+		return nil, fmt.Errorf("pad length too short, pad: %v, pad-length: %d, message: %v, cipher-text-length: %d", pad, len(pad), message, len(cipherText))
 	}
 
 	unciphered := make([]byte, cipherTextSize)
