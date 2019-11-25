@@ -82,7 +82,7 @@ func cryptHmacXorWithIntegrity(message []byte, h func() hash.Hash, encryptKey []
 
 	pad := padMac.Sum(nil)
 	if len(pad) < len(message) {
-		return nil, fmt.Errorf("pad length to short, pad: %v, pad-size: %d, message: %v, message-text-size: %d", pad, len(pad), message, len(message))
+		return nil, fmt.Errorf("pad length too short, pad: %v, pad-length: %d, message: %v, message-text-length: %d", pad, len(pad), message, len(message))
 	}
 
 	ciphered := make([]byte, len(message))
