@@ -16,7 +16,7 @@ install:
 - make mod-tidy
 
 script:
-- make test
+- make lint test
 
 branches:
   only:
