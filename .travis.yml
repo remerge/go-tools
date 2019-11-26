@@ -16,6 +16,7 @@ install:
 - echo 'KEY' >> $HOME/.ssh/known_hosts
 
 script:
+- git clone -- https://github.com/mgechev/revive /home/travis/gopath/src/github.com/mgechev/revive
 - rm -f go.sum /tmp/go-tools.go.mod.tidy.bak /tmp/go-tools.go.mod.tidy
 - cp go.mod /tmp/go-tools.go.mod.tidy.bak
 - go mod tidy
