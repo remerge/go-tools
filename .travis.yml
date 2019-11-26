@@ -13,12 +13,12 @@ before_install:
 - git config --global url.git@github.com:.insteadof https://github.com/
 
 script:
-- rm -f go.sum /tmp/$(PROJECT).go.mod.tidy.bak /tmp/$(PROJECT).go.mod.tidy
-- cp go.mod /tmp/$(PROJECT).go.mod.tidy.bak
+- rm -f go.sum /tmp/go-tools.go.mod.tidy.bak /tmp/go-tools.go.mod.tidy
+- cp go.mod /tmp/go-tools.go.mod.tidy.bak
 - go mod tidy
-- mv go.mod /tmp/$(PROJECT).go.mod.tidy
-- mv /tmp/$(PROJECT).go.mod.tidy.bak go.mod
-- diff go.mod /tmp/$(PROJECT).go.mod.tidy
+- mv go.mod /tmp/go-tools.go.mod.tidy
+- mv /tmp/go-tools.go.mod.tidy.bak go.mod
+- diff go.mod /tmp/go-tools.go.mod.tidy
 
 branches:
   only:
