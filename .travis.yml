@@ -12,6 +12,9 @@ cache:
 before_install:
 - git config --global url.git@github.com:.insteadof https://github.com/
 
+install:
+- echo 'KEY' >> $HOME/.ssh/known_hosts
+
 script:
 - rm -f go.sum /tmp/go-tools.go.mod.tidy.bak /tmp/go-tools.go.mod.tidy
 - cp go.mod /tmp/go-tools.go.mod.tidy.bak
