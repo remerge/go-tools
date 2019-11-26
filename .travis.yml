@@ -19,6 +19,13 @@ script:
 - mv go.mod /tmp/go-tools.go.mod.tidy
 - mv /tmp/go-tools.go.mod.tidy.bak go.mod
 - diff go.mod /tmp/go-tools.go.mod.tidy
+- make .lint-mod-tidy
+- make .lint-fmt
+- make .lint-goimports
+- make .lint-vet
+- make .lint-revive
+- make .lint-fix
+- make lint
 
 branches:
   only:
