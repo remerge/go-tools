@@ -48,7 +48,9 @@ func TestUUIDOsMatching(t *testing.T) {
 }
 
 func TestIsNoId(t *testing.T) {
-
+	assert.True(t, IsNoid(""))
+	assert.True(t, IsNoid("00000000-0000-0000-0000-000000000000"))
+	assert.False(t, IsNoid("04506430-f5c1-4d19-a54e-d5cee6a9355c"))
 }
 
 var uuidRegex = regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$")
