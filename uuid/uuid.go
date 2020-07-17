@@ -32,12 +32,12 @@ type IdentityType int
 const (
 	IdentityTypeOther IdentityType = iota
 	IdentityTypeIDFAOrAAID
-	IdentityTypeNoid
+	IdentityTypeNoID
 )
 
 func GetIdentity(uuid string) IdentityType {
 	if IsNoID(uuid) {
-		return IdentityTypeNoid
+		return IdentityTypeNoID
 	}
 	return IdentityTypeIDFAOrAAID
 }
