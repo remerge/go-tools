@@ -27,6 +27,21 @@ func IsAndroid(uuid string) bool {
 	return IsValidFast(uuid) && matchUuidRegexAndroid(uuid) && !isTest(uuid)
 }
 
+type IdentityType int
+
+const (
+	IdentityTypeOther IdentityType = iota
+	IdentityTypeIDFAOrAAID
+	IdentityTypeNoid
+)
+
+func GetIdentity(uuid string) IdentityType {
+	if IsNoid(uuid) {
+		return IdentityTypeNoid
+	}
+	return IdentityTypeIDFAOrAAID
+}
+
 func IsMaid(uuid string) bool {
 	return !IsNoid(uuid)
 }
