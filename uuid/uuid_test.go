@@ -47,10 +47,10 @@ func TestUUIDOsMatching(t *testing.T) {
 	assert.True(t, MatchesOS("ios", "ios", "ED83F96D-D14E-4A81-8C7A-021DA055DEF5"), "correct OS but correct user id should match")
 }
 
-func TestIsNoid(t *testing.T) {
-	assert.True(t, IsNoid(""))
-	assert.True(t, IsNoid("00000000-0000-0000-0000-000000000000"))
-	assert.False(t, IsNoid("04506430-f5c1-4d19-a54e-d5cee6a9355c"))
+func TestIsNoID(t *testing.T) {
+	assert.True(t, IsNoID(""))
+	assert.True(t, IsNoID("00000000-0000-0000-0000-000000000000"))
+	assert.False(t, IsNoID("04506430-f5c1-4d19-a54e-d5cee6a9355c"))
 }
 
 func TestGetIdentity(t *testing.T) {

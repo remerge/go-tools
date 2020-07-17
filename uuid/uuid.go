@@ -36,17 +36,13 @@ const (
 )
 
 func GetIdentity(uuid string) IdentityType {
-	if IsNoid(uuid) {
+	if IsNoID(uuid) {
 		return IdentityTypeNoid
 	}
 	return IdentityTypeIDFAOrAAID
 }
 
-func IsMaid(uuid string) bool {
-	return !IsNoid(uuid)
-}
-
-func IsNoid(uuid string) bool {
+func IsNoID(uuid string) bool {
 	return uuid == "" || uuid == "00000000-0000-0000-0000-000000000000"
 }
 
