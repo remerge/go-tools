@@ -27,25 +27,6 @@ func IsAndroid(uuid string) bool {
 	return IsValidFast(uuid) && matchUuidRegexAndroid(uuid) && !isTest(uuid)
 }
 
-type IdentityType int
-
-const (
-	IdentityTypeOther IdentityType = iota
-	IdentityTypeIDFAOrAAID
-	IdentityTypeNoID
-)
-
-func GetIdentity(uuid string) IdentityType {
-	if IsNoID(uuid) {
-		return IdentityTypeNoID
-	}
-	return IdentityTypeIDFAOrAAID
-}
-
-func IsNoID(uuid string) bool {
-	return uuid == "" || uuid == "00000000-0000-0000-0000-000000000000"
-}
-
 func MatchesOS(expectedOS string, givenOS string, id string) bool {
 	if expectedOS == "" {
 		return true
