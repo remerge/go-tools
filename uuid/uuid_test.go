@@ -47,17 +47,6 @@ func TestUUIDOsMatching(t *testing.T) {
 	assert.True(t, MatchesOS("ios", "ios", "ED83F96D-D14E-4A81-8C7A-021DA055DEF5"), "correct OS but correct user id should match")
 }
 
-func TestIsNoID(t *testing.T) {
-	assert.True(t, IsNoID(""))
-	assert.True(t, IsNoID("00000000-0000-0000-0000-000000000000"))
-	assert.False(t, IsNoID("04506430-f5c1-4d19-a54e-d5cee6a9355c"))
-}
-
-func TestGetIdentity(t *testing.T) {
-	assert.Equal(t, GetIdentity(""), IdentityTypeNoID)
-	assert.Equal(t, GetIdentity("04506430-f5c1-4d19-a54e-d5cee6a9355c"), IdentityTypeIDFAOrAAID)
-}
-
 var uuidRegex = regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$")
 
 var benchUuids = []string{
