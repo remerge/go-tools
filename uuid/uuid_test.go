@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var uuids = []struct {
@@ -24,6 +25,18 @@ var uuids = []struct {
 	{"28C1E1D8-7E76-4C57-A25A-4B8C81A3EB2A", true, true},
 	{"a824c967-771f-4630-a30d-389813424805", true, true},
 	{"eD83F96D-D14E-4A81-8C7A-021DA055DEF5F", false, false},
+}
+
+func TestDeadBeaf(t *testing.T) {
+	id := "DEADBEEF-1234-1234-1234-123456789ABC"
+
+	valid := IsValid(id)
+	require.True(t, valid)
+	uuid := matchUuidRegex(id)
+	require.True(t, uuid)
+
+	iOs := matchUuidRegexiOS(id)
+	require.True(t, iOs)
 }
 
 func TestUUID(t *testing.T) {
