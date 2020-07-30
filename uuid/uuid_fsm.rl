@@ -41,7 +41,7 @@ func matchUuidRegexAndroid(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	eof := pe
 	%%{
-		main := [a-f0-9]{8} '-' [a-f0-9]{4} '-4' [a-f0-9]{3} '-' [8|9|a|b] [a-f0-9]{3} '-' [a-f0-9]{12} %{ return true } ;
+		main := [a-f0-9]{8} '-' [a-f0-9]{4} '-' [a-f0-9]{4} '-' [8|9|a|b] [a-f0-9]{3} '-' [a-f0-9]{12} %{ return true } ;
 		write init;
 		write exec;
 	}%%
