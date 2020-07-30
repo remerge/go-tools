@@ -1873,7 +1873,12 @@ func matchUuidRegexAndroid(data string) bool {
 			goto _test_eof15
 		}
 	st_case_15:
-		if data[p] == 52 {
+		switch {
+		case data[p] > 57:
+			if 97 <= data[p] && data[p] <= 102 {
+				goto st16
+			}
+		case data[p] >= 48:
 			goto st16
 		}
 		goto st0
@@ -2288,7 +2293,7 @@ func matchUuidRegexAndroid(data string) bool {
 			case 37:
 //line uuid_fsm.rl:44
 				return true
-//line uuid_fsm.go:2076
+//line uuid_fsm.go:2081
 			}
 		}
 
