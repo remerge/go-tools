@@ -31,6 +31,9 @@ jobs:
           name: Test
           command: make test-nocache
       - run:
+          name: Generate
+          command: .circleci/gen_and_check_git_changes.sh
+      - run:
           name: Test with race detector
           command: make race-nocache
       - when:
