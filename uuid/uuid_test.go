@@ -15,7 +15,7 @@ var uuids = []struct {
 }{
 	{"asdads", false, false},
 	{"0X000000A0000Z0000Y00Y0X000000000000", false, false},
-	{"00000000-0000-0000-0000-000000000000", true, false},
+	{"00000000-0000-0000-0000-000000000000", true, true},
 	{"0X000000-0000-0000-00Y0-000000000000", true, false},
 	{"FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF", true, false},
 	{"ffffffff-ffff-ffff-ffff-ffffffffffff", true, false},

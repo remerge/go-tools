@@ -44,5 +44,5 @@ func MatchesOS(expectedOS string, givenOS string, id string) bool {
 }
 
 func isTest(uuid string) bool {
-	return uuid == "00000000-0000-0000-0000-000000000000" || uuid == "ffffffff-ffff-ffff-ffff-ffffffffffff" || uuid == "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"
+	return uuid == "ffffffff-ffff-ffff-ffff-ffffffffffff" || uuid == "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"
 }
