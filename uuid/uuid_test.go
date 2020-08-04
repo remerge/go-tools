@@ -41,7 +41,7 @@ func TestUUID(t *testing.T) {
 	}
 }
 
-func TestIsOs(t *testing.T) {
+func TestIsiOs(t *testing.T) {
 	require.True(t, IsiOS("DEADBEEF-1234-1234-1234-123456789ABC"))
 }
 
