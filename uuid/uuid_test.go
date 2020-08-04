@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var uuids = []struct {
@@ -38,6 +39,10 @@ func TestUUID(t *testing.T) {
 			t.Errorf("%s should be recognized as valid=%t but is valid=%t", uuid.id, uuid.valid, valid)
 		}
 	}
+}
+
+func TestIsiOs(t *testing.T) {
+	require.True(t, IsiOS("DEADBEEF-1234-1234-1234-123456789ABC"))
 }
 
 func TestUUIDOsMatching(t *testing.T) {
