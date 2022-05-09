@@ -154,7 +154,7 @@ To clean update the modules include via `go.mod` you can use the `mod-tidy` targ
 
 # Isolated test deployment ([divert](#includes))
 
-In very rare case a custom build needs to be deployed in production. Diversions make this possible. 
+In very rare case a custom build needs to be deployed in production. Diversions make this possible.
 **This should be use carefully and only under special curcumstances**
 
 ## Requirements
@@ -163,7 +163,7 @@ In very rare case a custom build needs to be deployed in production. Diversions 
 1. Minimal knowledge about SystemD
 1. Go with crossplatform build on developer machine
 
-## Setup and teardown
+## Deploying a custom development binary
 
 For each operation you need to define the `DIVERT_SSH` environment variable.
 
@@ -178,22 +178,16 @@ Alternatively `DIVERT_SSH` can be defined globally:
 export DIVERT_SSH=user@app.machine
 ```
 
-> Diversion status may be checked by `.CHECK-divert-on` and
-  `.CHECK-divert-on` targets.
+> Diversion status can be checked with the  `divert-status` target.
 
-Now you can run the `divert-setup` target. This target will prepare the basic setup and
-stop `chef-client`.
+To build and upload a custom build the divert target can be used. It stops the chef client, copies the custom build binary to the server and restarts the service with the new binary.
 
-To revert diversion environment and start `chef-client` use `divert-teardown` target.
+If there is already a custom build binary running and it should be replaced with an updated version, use the `divert-update` target.
 
-## Journal
+Use `divert-stop` to end the diversion, switch back to the last production binary and restart chef-client.  
 
 Use `divert-journal` to follow application log. This target is not depends on
 diverted environment.
-
-### Deploy
-
-Use `divert-do` target to deploy dev version.
 
 # Setup
 
@@ -227,10 +221,12 @@ To update the Makefile includes in the current repository.
     make update-makefile
 
 
-## Travis CI configuration
-
-Every project should have a Travis CI configuration. [This example can be used as a starting point.](https://github.com/remerge/go-makefile/blob/master/travis.yaml)
-
 ## CircleCI configuration
 
 To setup a project for CirlceCI please read the [Setup CircleCI guide in Confluence](https://remerge.atlassian.net/wiki/spaces/tech/pages/4030889/Creating+a+new+Go+project). This uses the config file in the `.circleci` folder as a starting point.
+
+## GitHub Actions configurations
+
+Create `.github/workflows` directory. Depending on type of project (Application / Library) link `go-app.yml` or `go-lib.yml` from `github` directory. For nonstandard settings use copy as starting point.
+
+Also link `go-optional.yml` for weekly sanity checks.
