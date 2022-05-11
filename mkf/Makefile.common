@@ -75,19 +75,19 @@ TESTS ?= .
 TEST_TAGS ?=
 TEST_ARGS ?=
 
-test: $(GO_SOURCES) go.mod	## regular tests
+test:: $(GO_SOURCES) go.mod	## regular tests
 	go test $(TEST_ARGS) -tags="$(TEST_TAGS)" -timeout=$(TEST_TIMEOUT) -run=$(TESTS) ./...
 
-race: $(GO_SOURCES) go.mod	## race tests
+race:: $(GO_SOURCES) go.mod	## race tests
 	CGO_ENABLED=1 go test  $(TEST_ARGS) -tags="$(TEST_TAGS)" -race -timeout=$(TEST_TIMEOUT) -run=$(TESTS) ./...
 
-bench: $(GO_SOURCES) go.mod	## benchmarks
+bench:: $(GO_SOURCES) go.mod	## benchmarks
 	go test  $(TEST_ARGS) -tags="$(TEST_TAGS)" -run=^$ -bench=$(TESTS) -benchmem -cpu 32 ./...
 
-test-nocache: $(GO_SOURCES) go.mod
+test-nocache:: $(GO_SOURCES) go.mod
 	go test  $(TEST_ARGS) -tags="$(TEST_TAGS)" -count=1 -timeout=$(TEST_TIMEOUT) -run=$(TESTS) ./...
 
-race-nocache: $(GO_SOURCES) go.mod
+race-nocache:: $(GO_SOURCES) go.mod
 	CGO_ENABLED=1 go test  $(TEST_ARGS) -tags="$(TEST_TAGS)" -race -count=1 -timeout=$(TEST_TIMEOUT) -run=$(TESTS) ./...
 
 escape: $(GO_SOURCES) go.mod ## builds with escape analysis active
@@ -134,22 +134,14 @@ REVIVE_CONFIG = $(or $(wildcard revive.toml),$(MKF_PREFIX)/revive.toml)
 	@DIFF=`go tool fix -diff $^` && test -z "$$DIFF" || echo "$$DIFF" && test -z "$$DIFF"
 
 .lint-mod-tidy:	## check go mod tidy is applied
-	rm -f go.sum /tmp/$(PROJECT).go.mod.tidy.bak /tmp/$(PROJECT).go.mod.tidy
+	rm -f /tmp/$(PROJECT).go.mod.tidy.bak /tmp/$(PROJECT).go.sum.tidy.bak /tmp/$(PROJECT).go.mod.tidy /tmp/$(PROJECT).go.sum.tidy
 	cp go.mod /tmp/$(PROJECT).go.mod.tidy.bak
+	cp go.sum /tmp/$(PROJECT).go.sum.tidy.bak
 	go mod tidy
 	mv go.mod /tmp/$(PROJECT).go.mod.tidy
+	mv go.sum /tmp/$(PROJECT).go.sum.tidy
 	mv /tmp/$(PROJECT).go.mod.tidy.bak go.mod
+	mv /tmp/$(PROJECT).go.sum.tidy.bak go.sum
 	diff go.mod /tmp/$(PROJECT).go.mod.tidy
-.NOTPARALLEL: .lint-mod-tidy
-.PHONY: .lint-mod-tidy
-
-lint-mod-outdated:  ## check outdated deps
-	rm -f go.sum /tmp/$(PROJECT).go.mod.bak /tmp/$(PROJECT).go.mod.up
-	cp go.mod /tmp/$(PROJECT).go.mod.bak
-	go get -u
-	go mod tidy
-	mv go.mod /tmp/$(PROJECT).go.mod.up
-	mv /tmp/$(PROJECT).go.mod.bak go.mod
-	diff go.mod /tmp/$(PROJECT).go.mod.up
 .NOTPARALLEL: .lint-mod-tidy
 .PHONY: .lint-mod-tidy

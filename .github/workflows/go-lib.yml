@@ -1,0 +1,12 @@
+name: Go App
+on:
+  pull_request:
+  push:
+    branches:
+    - master
+    - main
+    - production
+
+jobs:
+  go-checks:
+    uses: ./.github/workflows/go-checks.yml
