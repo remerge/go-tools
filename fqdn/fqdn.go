@@ -6,14 +6,15 @@ import (
 	"os/exec"
 )
 
-// Get returns the FQDN of the host
+// Get tries to get the hostname from the HOSTNAME environment variable
+// and falls back to the output of the hostname command
 func Get() string {
 	host, ok := os.LookupEnv("HOSTNAME")
 	if !ok {
 		// #nosec
 		out, err := exec.Command("/bin/hostname", "-f").Output()
 		if err != nil {
-			return "localhost"
+			return "unknown"
 		}
 		return string(bytes.TrimSpace(out))
 	}
