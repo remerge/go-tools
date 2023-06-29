@@ -28,7 +28,7 @@ export GOPRIVATE ?= github.com/remerge/*
 
 TOOLS ?= $(MKF_PREFIX)/.tools
 $(TOOLS)/%:
-	test -x "$@" || GO111MODULE=off GOBIN=$(shell pwd)/$(dir $@) go get -u $*
+	test -x "$@" || GOBIN=$(shell pwd)/$(dir $@) go install $*@latest
 
 
 # Code maintenance
