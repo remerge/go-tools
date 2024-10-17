@@ -18,15 +18,9 @@ func SanitizeLabel(input string) string {
 	runeInput := []rune(input)
 	firstCh := runeInput[0]
 	// To prevent leading non-letter symbol
-	isAllowedLeadingCharacter := unicode.IsLetter(firstCh) || firstCh == '_'
+	isAllowedLeadingCharacter := unicode.IsLetter(firstCh)
 	if !isAllowedLeadingCharacter {
-		// Prepend `_` to a leading digit
-		if unicode.IsDigit(firstCh) {
-			result.WriteRune('_')
-		} else {
-			result.WriteRune('_')
-			runeInput = runeInput[1:]
-		}
+		result.WriteRune('_')
 	}
 
 	for _, ch := range runeInput {
