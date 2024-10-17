@@ -5,28 +5,46 @@ import (
 	"unicode"
 )
 
-func SanitizeLabel(value string) string {
-	var builder strings.Builder
-	previousUnderscore := false
+// SanitizeLabel sanitizes a label to conform with Prometheus label rules
+func SanitizeLabel(input string) string {
+	input = strings.TrimSpace(input)
 
-	for _, char := range value {
-		if char == ' ' || char == '-' {
-			if !previousUnderscore {
-				builder.WriteRune('_')
-				previousUnderscore = true
+	if input == "" {
+		return input
+	}
+
+	var result strings.Builder
+
+	runeInput := []rune(input)
+	// To prevent leading non-letter symbol
+	for _, firstRune := range runeInput {
+		isAllowedLeadingCharacter := unicode.IsLetter(firstRune) || firstRune == '_'
+		if !isAllowedLeadingCharacter {
+			// Prepend `_` to a leading digit
+			if unicode.IsDigit(firstRune) {
+				result.WriteRune('_')
+			} else {
+				result.WriteRune('_')
+				runeInput = runeInput[1:]
 			}
-		} else if unicode.IsLetter(char) || unicode.IsDigit(char) || char == '_' {
-			builder.WriteRune(char)
-			previousUnderscore = false
+		}
+
+		break
+	}
+
+	for _, ch := range runeInput {
+		if unicode.IsLetter(ch) || unicode.IsDigit(ch) || ch == '_' {
+			result.WriteRune(ch)
 		} else {
-			if !previousUnderscore {
-				builder.WriteRune('_')
-				previousUnderscore = true
-			}
+			result.WriteRune('_')
 		}
 	}
 
-	// Remove trailing underscore, if any
-	result := builder.String()
-	return strings.TrimRight(result, "_")
+	// Leading `__` (double undescore) are reserverd for internal use
+	sanitized := result.String()
+	for strings.HasPrefix(sanitized, "__") {
+		sanitized = "_" + sanitized[2:]
+	}
+
+	return sanitized
 }
