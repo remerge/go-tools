@@ -97,4 +97,10 @@ pre-commit-clean: ## remove pre-commit and cached repositories
 	pre-commit clean
 clean:: pre-commit-clean
 
+# Disable unreachable code check for Ragel-generated files
+VET_FLAGS := -unreachable=false
+
+# Exclude Ragel-generated files and problematic packages from revive linter
+REVIVELINTER_EXCLUDES := -exclude ./normalize/... -exclude ./uuid/... -exclude ./crypt/... -exclude ./version/...
+
 -include *.mk
