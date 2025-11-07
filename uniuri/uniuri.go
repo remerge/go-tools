@@ -54,8 +54,12 @@ func NewLenChars(length int, chars []byte) string {
 	i := 0
 	for {
 		// Fill random byte slice using math/rand/v2
-		for j := range r {
-			r[j] = byte(rand.Uint32())
+		// Use Uint64 to fill 8 bytes at a time for efficiency
+		for j := 0; j < len(r); j += 8 {
+			val := rand.Uint64()
+			for k := 0; k < 8 && j+k < len(r); k++ {
+				r[j+k] = byte(val >> (k * 8))
+			}
 		}
 		for _, rb := range r {
 			c := int(rb)
