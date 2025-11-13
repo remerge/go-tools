@@ -1,4 +1,4 @@
-GO_VERSION := 1.21
+GO_VERSION := 1.22
 
 SHADOW_LINTER := golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
 SHADOW_LINTER_VERSION := v0.13.0

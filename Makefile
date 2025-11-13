@@ -23,6 +23,12 @@ SHELL = bash
 # https://www.gnu.org/software/make/manual/html_node/Special-Variables.html
 .DEFAULT_GOAL := help
 
+# Disable unreachable code check for Ragel-generated files
+VET_FLAGS := -unreachable=false
+
+# Exclude Ragel-generated files and problematic packages from revive linter
+REVIVELINTER_EXCLUDES := -exclude ./normalize/... -exclude ./uuid/... -exclude ./crypt/... -exclude ./version/...
+
 .PHONY: help
 help: ## generate help text from Makefile comments
 	@grep -hE '^[a-zA-Z_0-9%-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
