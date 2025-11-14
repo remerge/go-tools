@@ -62,10 +62,10 @@ func DecryptHmacXorWithIntegrity(message, encryptKey, integrityKey []byte) ([]by
 }
 
 func CryptHmacXorWithIntegrity(message, encryptKey, integrityKey []byte) ([]byte, error) {
-	return cryptHmacXorWithIntegrity(message, sha1.New, encryptKey, integrityKey)
+	return calcCryptHmacXorWithIntegrity(message, sha1.New, encryptKey, integrityKey)
 }
 
-func cryptHmacXorWithIntegrity(message []byte, h func() hash.Hash, encryptKey []byte, integrityKey []byte) ([]byte, error) {
+func calcCryptHmacXorWithIntegrity(message []byte, h func() hash.Hash, encryptKey []byte, integrityKey []byte) ([]byte, error) {
 	var err error
 
 	initializationVector := make([]byte, initializationVectorSize)
