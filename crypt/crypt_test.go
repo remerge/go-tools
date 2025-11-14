@@ -58,7 +58,7 @@ func TestDecryptHmacXorWithIntegrity(t *testing.T) {
 
 			// sha1 give a 20 byte pad --> can't build a cipher text longer than 20 bytes
 			// sha256 give a 32 byte long pad --> can build it with a 21 byte array
-			cryptMsg, err := cryptHmacXorWithIntegrity(bytes, sha256.New, testEncryptionKeys, testIntegrityKeys)
+			cryptMsg, err := calcCryptHmacXorWithIntegrity(bytes, sha256.New, testEncryptionKeys, testIntegrityKeys)
 			require.NoError(t, err)
 
 			_, err = DecryptHmacXorWithIntegrity(cryptMsg, testEncryptionKeys, testIntegrityKeys)

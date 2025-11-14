@@ -27,7 +27,7 @@ SHELL = bash
 VET_FLAGS := -unreachable=false
 
 # Exclude Ragel-generated files and problematic packages from revive linter
-REVIVELINTER_EXCLUDES := -exclude ./normalize/... -exclude ./uuid/... -exclude ./crypt/... -exclude ./version/...
+REVIVELINTER_EXCLUDES = $(foreach p,$(wildcard **/*_fsm.go),-exclude $(p))
 
 .PHONY: help
 help: ## generate help text from Makefile comments
