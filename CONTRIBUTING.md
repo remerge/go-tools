@@ -25,7 +25,6 @@ need to be installed manually.
 - [docker](https://www.docker.com/products/docker-desktop/) or access to a
   working docker host
 - [pre-commit](https://pre-commit.com) to run formatting and linting
-- [pipx](https://pypa.github.io/pipx/) to install global dependencies
 - [direnv](https://direnv.net) to ensure a working environment
 - [copier](https://copier.readthedocs.io) to update this repository from the
   template
@@ -33,8 +32,7 @@ need to be installed manually.
 Most dependencies can be installed using [Homebrew](https://brew.sh):
 
 ```shell
-brew install --cask docker
-brew install pre-commit pipx direnv copier
+brew install docker pre-commit direnv copier
 ```
 
 Once `pre-commit` hook is activated (`make pre-commit-install`),
@@ -171,24 +169,14 @@ GOFMT_EXCLUDES = -not -path "./vendor/*"
 
 ## Deploying
 
-We use Chef to deploy binaries to our servers. The git branch that is used to
-build bianries from is `production`. If changes to the production branch are
-detected, the CI executes our test suite and if succesfull builds a new binary.
-Usually the new binary is roled out to all servers within a window of 30
-minutes.
+We use `nomad` to deploy binaries to our servers. The git branch that is used to
+build binaries from is `production`.
 
 The `release` target can be used to trigger this process. It pushes the current
-`master` branch to `production`.
+`master`/`main` branch to `production`.
 
 ```shell
 make release
-```
-
-If the deployment needs to be done faster (enforced) the `deploy` target can be
-used. **This should only be used if there is a good reason!**
-
-```shell
-make deploy
 ```
 
 ### Modules
