@@ -1,19 +1,9 @@
-GO_VERSION := 1.21
-
-SHADOW_LINTER := golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
-SHADOW_LINTER_VERSION := v0.13.0
-
-GOIMPORTS_LINTER_VERSION := v0.13.0
-GOIMPORTS_LINTER := golang.org/x/tools/cmd/goimports
-
-REVIVE_LINTER_VERSION := v1.3.3
-REVIVE_LINTER := github.com/mgechev/revive
 
 
 .PHONY: go-update
 go-update:: ## update Go modules
-	@go get -u -x ./... 2>&1 | grep -vP '^(#|mkdir|cd|\d\.\d\d\ds #)' || :
-	@go mod tidy -v -x -go $(GO_VERSION)
+	go get -u -x ./... 2>&1 | grep -vP '^(#|mkdir|cd|\d\.\d\d\ds #)' || :
+	go mod tidy -v -x
 update:: go-update
 
 .PHONY: go-build
@@ -54,33 +44,16 @@ GOTOOL_VERSION_TO_INSTALL ?= latest
 $(TOOLS)/%:
 	test -x "$@" || GOBIN=$(shell pwd)/$(dir $@) go install $*@$(GOTOOL_VERSION_TO_INSTALL)
 
-$(SHADOW_LINTER):
-	make $(TOOLS)/$@ GOTOOL_VERSION_TO_INSTALL=$(SHADOW_LINTER_VERSION)
-
-$(REVIVE_LINTER):
-	make $(TOOLS)/$@ GOTOOL_VERSION_TO_INSTALL=$(REVIVE_LINTER_VERSION)
-
-$(GOIMPORTS_LINTER):
-	make $(TOOLS)/$@ GOTOOL_VERSION_TO_INSTALL=$(GOIMPORTS_LINTER_VERSION)
-
 # Code maintenance
 
 GENERATE_SOURCES ?=
 
-gen: $(GENERATE_SOURCES)
+generate:: $(GENERATE_SOURCES)
 	go generate ./...
 	$(MAKE) fmt
 
-fmt:: .fmt-gofmt .fmt-goimports
-
-GOFMT_EXCLUDES ?= %.pb.go %_gen.go %_easyjson.go
-GOFMT_SOURCES = $(filter-out $(GOFMT_EXCLUDES),$(GO_SOURCES))
-
-.fmt-gofmt: $(GOFMT_SOURCES)	## format go sources
-	if [[ "$(GOFMT_SOURCES)" != "" ]]; then gofmt -w -s -l $(GOFMT_SOURCES); fi
-
-.fmt-goimports: $(GOIMPORTS_LINTER) $(GOFMT_SOURCES)	## group and correct imports
-	if [[ "$(GOFMT_SOURCES)" != "" ]]; then $(TOOLS)/$< -w -l $(GOFMT_SOURCES); fi
+format::
+	pre-commit run golangci-lint-fmt --all-files
 
 # Dependencies cleanup
 
@@ -122,33 +95,22 @@ watch: $(TOOLS)/github.com/cespare/reflex
 
 # Linting
 
-# *lint* target will run go fmt check, vet, goimports and revive.
-# Use "REVIVELINTER_EXCLUDES" to exclude files from revive.
-# Use "GOFMT_EXCLUDES" to exclude files from gofmt and goimports.
-# Use "VET_FLAGS" to define vet linter flags.
+# *lint* target will run golang-ci.
 
-lint:: .lint-mod-tidy .lint-fmt .lint-goimports .lint-vet .lint-shadow .lint-revive .lint-fix ## run all linters
+GO_LOCAL_CHECK_TARGETS=.lint-mod-tidy .lint-golangci .lint-dm
+# for CI, `golangci` linter is called within the job
+GO_CI_CHECK_TARGETS=.lint-mod-tidy .lint-dm
+go-check:
+ifeq ($(GITHUB_JOB),pre-commit)
+	$(MAKE) $(GO_CI_CHECK_TARGETS)
+else ifneq ($(strip $(GITHUB_JOB)),)
+	@echo "Warning: GITHUB_JOB is set to '$(GITHUB_JOB)', skipping linters"
+else # local run
+	$(MAKE) $(GO_LOCAL_CHECK_TARGETS)
+endif
 
-.lint-fmt: $(GOFMT_SOURCES) ## compare gofmt and goimports output
-	@test -z "$(GOFMT_SOURCES)" || DIFF=`gofmt -s -d $(GOFMT_SOURCES)` && test -z "$$DIFF" || echo "$$DIFF" && test -z "$$DIFF"
-
-.lint-goimports: $(GOIMPORTS_LINTER) $(GOFMT_SOURCES)
-	@test -z "$(GOFMT_SOURCES)" || DIFF=`$(TOOLS)/$< -d $(GOFMT_SOURCES)` && test -z "$$DIFF" || echo "$$DIFF" && test -z "$$DIFF"
-
-.lint-vet: $(GO_SOURCES) go.mod ## run vet
-	go vet $(VET_FLAGS) ./...
-.NOTPARALLEL: .lint-vet
-
-.lint-shadow: $(SHADOW_LINTER) $(GO_SOURCES) ## run shadow linter
-	go vet -vettool=$(TOOLS)/$< ./...
-.NOTPARALLEL: .lint-shadow
-
-REVIVE_CONFIG = $(wildcard revive.toml)
-.lint-revive: $(REVIVE_LINTER) $(GO_SOURCES) $(REVIVE_CONFIG)	## run revive linter
-	$(TOOLS)/$< -config $(REVIVE_CONFIG) -formatter friendly -exclude ./vendor/... $(REVIVELINTER_EXCLUDES) ./...
-
-.lint-fix: $(GO_SOURCES) ## run fix
-	@DIFF=`go tool fix -diff $^` && test -z "$$DIFF" || echo "$$DIFF" && test -z "$$DIFF"
+.lint-golangci: .golangci.yml
+	pre-commit run golangci-lint --all-files
 
 .lint-mod-tidy:	## check go mod tidy is applied
 # clean up from the last run
@@ -168,6 +130,9 @@ REVIVE_CONFIG = $(wildcard revive.toml)
 	diff go.mod /tmp/$(PROJECT_ID).go.mod.tidy
 .NOTPARALLEL: .lint-mod-tidy
 .PHONY: .lint-mod-tidy
+
+.lint-dm: ## check if dm.SchemaVersion is up-to-date
+	./bin/check_dm_schema_version.sh
 
 # Building binaries
 
@@ -200,7 +165,7 @@ DIVERT_CLUSTER ?= $(shell echo $(_DIVERT_CLUSTER) | tr '[:upper:]' '[:lower:]')
 UPPER_DIVERT_CLUSTER = $(shell echo $(DIVERT_CLUSTER) | tr '[:lower:]' '[:upper:]')
 
 define setup-nomad-env
-export NOMAD_ADDR = http://nomad.service.$(DIVERT_CLUSTER).consul:4646/
+export NOMAD_ADDR = http://nomad.$(DIVERT_CLUSTER).rmge.net:4646/
 export NOMAD_TOKEN = $(shell \
 	auto_nomad_token=""; \
 	if which op > /dev/null 2>&1; then \
@@ -258,9 +223,9 @@ endif
 divert: .check-dependencies .nomad-env .input-validation
 	@mkdir -p .build
 	@docker build \
-	--build-arg "CI_COMMIT=$(TASK_IMAGE)" \
-	--build-arg "CI_REPO=$(PROJECT_REPO)" \
-	--build-arg "CI_REPO=$(DEV_WHOAMI)" \
+	--platform linux/amd64 \
+	--build-arg "CI_COMMIT=$(CI_COMMIT)" \
+	--build-arg "CI_REPO=$(CI_REPO)" \
 	--ssh default . \
 	-t "$(TASK_IMAGE)"
 
@@ -276,23 +241,35 @@ divert: .check-dependencies .nomad-env .input-validation
 		nomad.variables.hcl > .build/.divert.nomad.variables.hcl; \
 		sed -i -e "s|nomad/jobs/$(PROJECT_ID)|nomad/jobs/$(PROJECT_ID)-${DIVERT_HOST_NAME}|" \
 		.build/.divert.nomad.variables.hcl; \
+		sed -i -e "s|\(.*\)count =\(.*\)|count = 1|" .build/.divert.nomad.variables.hcl;  \
+		if [ -n "$(DIVERT_ROLLBAR_OFF)" ]; then \
+			echo "*** WARNING: Rollbar alerts to be suppressed"; \
+			sed -i '/rollbar-token/d' .build/.divert.nomad.variables.hcl; \
+		fi; \
 		nomad-pack registry add remerge-pack github.com/remerge/nomad-pack; \
 		nomad-pack run docker_service \
 		--var='task_image=$(TASK_IMAGE)' --var='priority=$(PRIORITY)' \
-		--var='cluster=${DIVERT_CLUSTER}' \
+		--var='cluster=${DIVERT_CLUSTER}' --var='service_name=$(PROJECT_ID)' \
 		--var='constraints=[{"attribute":"$$$${attr.unique.hostname}","value": "${DIVERT_HOST_NAME}", "operator": "="}]' \
-		--var='environment=production' --namespace='diverts' \
+		--var='environment=divert' --namespace='diverts' \
 		--var-file=.build/.divert.nomad.variables.hcl \
+		--var 'count_cluster_config={"${DIVERT_CLUSTER}": 1}' \
 		--name=$(PROJECT_ID)-${DIVERT_HOST_NAME} --registry=remerge-pack; \
 	else \
 		sed "s/job \"\(.*\)\" {/job \"\1-${DIVERT_HOST_NAME}\" \
 		{/" nomad.hcl > .build/.divert.nomad.hcl; \
 		sed -i -e "s|nomad/jobs/$(PROJECT_ID)|nomad/jobs/$(PROJECT_ID)-${DIVERT_HOST_NAME}|" \
 		.build/.divert.nomad.hcl; \
+		sed -i -e "s|\(.*\)count =\(.*\)|\1count = 1|" \
+		.build/.divert.nomad.hcl; \
+		if [ -n "$(DIVERT_ROLLBAR_OFF)" ]; then \
+			echo "*** WARNING: Rollbar alerts to be suppressed"; \
+			sed -i '/rollbar-token/d' .build/.divert.nomad.hcl; \
+		fi; \
 		nomad job run -namespace "diverts" -region ${DIVERT_CLUSTER} \
 		-var 'task_image=$(TASK_IMAGE)' -var 'cluster=${DIVERT_CLUSTER}' \
 		-var 'priority=$(PRIORITY)' \
-		-var 'contraint_value=${DIVERT_HOST_NAME}' -var 'environment=production' \
+		-var 'contraint_value=${DIVERT_HOST_NAME}' -var 'environment=divert' \
 		-var 'contraint_attribute=attr.unique.hostname' \
 		.build/.divert.nomad.hcl; \
 	fi \
