@@ -440,7 +440,7 @@ func MatchOsAndroid(data string) bool {
 
 //line os_fsm.go:412
 const os_tvos_start int = 0
-const os_tvos_first_final int = 4
+const os_tvos_first_final int = 11
 const os_tvos_error int = -1
 
 const os_tvos_en_main int = 0
@@ -471,6 +471,22 @@ func MatchOsTvOS(data string) bool {
 			goto st_case_3
 		case 4:
 			goto st_case_4
+		case 5:
+			goto st_case_5
+		case 6:
+			goto st_case_6
+		case 7:
+			goto st_case_7
+		case 8:
+			goto st_case_8
+		case 9:
+			goto st_case_9
+		case 10:
+			goto st_case_10
+		case 11:
+			goto st_case_11
+		case 12:
+			goto st_case_12
 		}
 		goto st_out
 	st0:
@@ -479,10 +495,14 @@ func MatchOsTvOS(data string) bool {
 		}
 	st_case_0:
 		switch data[p] {
+		case 65:
+			goto st1
 		case 84:
+			goto st7
+		case 97:
 			goto st1
 		case 116:
-			goto st1
+			goto st7
 		}
 		goto st0
 	st1:
@@ -491,14 +511,18 @@ func MatchOsTvOS(data string) bool {
 		}
 	st_case_1:
 		switch data[p] {
-		case 84:
+		case 65:
 			goto st1
-		case 86:
+		case 80:
+			goto st2
+		case 84:
+			goto st7
+		case 97:
+			goto st1
+		case 112:
 			goto st2
 		case 116:
-			goto st1
-		case 118:
-			goto st2
+			goto st7
 		}
 		goto st0
 	st2:
@@ -507,14 +531,18 @@ func MatchOsTvOS(data string) bool {
 		}
 	st_case_2:
 		switch data[p] {
-		case 79:
+		case 65:
+			goto st1
+		case 80:
 			goto st3
 		case 84:
+			goto st7
+		case 97:
 			goto st1
-		case 111:
+		case 112:
 			goto st3
 		case 116:
-			goto st1
+			goto st7
 		}
 		goto st0
 	st3:
@@ -523,31 +551,214 @@ func MatchOsTvOS(data string) bool {
 		}
 	st_case_3:
 		switch data[p] {
-		case 83:
-			goto tr4
+		case 65:
+			goto st1
+		case 76:
+			goto st4
 		case 84:
+			goto st7
+		case 97:
 			goto st1
-		case 115:
-			goto tr4
+		case 108:
+			goto st4
 		case 116:
-			goto st1
+			goto st7
 		}
 		goto st0
-	tr4:
-//line os_fsm.rl:41
-		return true
-		goto st4
 	st4:
 		if p++; p == pe {
 			goto _test_eof4
 		}
 	st_case_4:
-//line os_fsm.go:518
 		switch data[p] {
+		case 65:
+			goto st1
+		case 69:
+			goto st5
 		case 84:
+			goto st7
+		case 97:
+			goto st1
+		case 101:
+			goto st5
+		case 116:
+			goto st7
+		}
+		goto st0
+	st5:
+		if p++; p == pe {
+			goto _test_eof5
+		}
+	st_case_5:
+		switch data[p] {
+		case 65:
+			goto st1
+		case 84:
+			goto st6
+		case 97:
 			goto st1
 		case 116:
+			goto st6
+		}
+		goto st0
+	st6:
+		if p++; p == pe {
+			goto _test_eof6
+		}
+	st_case_6:
+		switch data[p] {
+		case 65:
 			goto st1
+		case 84:
+			goto st7
+		case 86:
+			goto tr8
+		case 97:
+			goto st1
+		case 116:
+			goto st7
+		case 118:
+			goto tr8
+		}
+		goto st0
+	st7:
+		if p++; p == pe {
+			goto _test_eof7
+		}
+	st_case_7:
+		switch data[p] {
+		case 65:
+			goto st1
+		case 84:
+			goto st7
+		case 86:
+			goto st8
+		case 97:
+			goto st1
+		case 116:
+			goto st7
+		case 118:
+			goto st8
+		}
+		goto st0
+	st8:
+		if p++; p == pe {
+			goto _test_eof8
+		}
+	st_case_8:
+		switch data[p] {
+		case 32:
+			goto st9
+		case 65:
+			goto st1
+		case 79:
+			goto st10
+		case 84:
+			goto st7
+		case 95:
+			goto st9
+		case 97:
+			goto st1
+		case 111:
+			goto st10
+		case 116:
+			goto st7
+		}
+		if 9 <= data[p] && data[p] <= 13 {
+			goto st9
+		}
+		goto st0
+	st9:
+		if p++; p == pe {
+			goto _test_eof9
+		}
+	st_case_9:
+		switch data[p] {
+		case 65:
+			goto st1
+		case 79:
+			goto st10
+		case 84:
+			goto st7
+		case 97:
+			goto st1
+		case 111:
+			goto st10
+		case 116:
+			goto st7
+		}
+		goto st0
+	st10:
+		if p++; p == pe {
+			goto _test_eof10
+		}
+	st_case_10:
+		switch data[p] {
+		case 65:
+			goto st1
+		case 83:
+			goto tr12
+		case 84:
+			goto st7
+		case 97:
+			goto st1
+		case 115:
+			goto tr12
+		case 116:
+			goto st7
+		}
+		goto st0
+	tr12:
+//line os_fsm.rl:41
+		return true
+		goto st11
+	st11:
+		if p++; p == pe {
+			goto _test_eof11
+		}
+	st_case_11:
+//line os_fsm.go:693
+		switch data[p] {
+		case 65:
+			goto st1
+		case 84:
+			goto st7
+		case 97:
+			goto st1
+		case 116:
+			goto st7
+		}
+		goto st0
+	tr8:
+//line os_fsm.rl:41
+		return true
+		goto st12
+	st12:
+		if p++; p == pe {
+			goto _test_eof12
+		}
+	st_case_12:
+//line os_fsm.go:714
+		switch data[p] {
+		case 32:
+			goto st9
+		case 65:
+			goto st1
+		case 79:
+			goto st10
+		case 84:
+			goto st7
+		case 95:
+			goto st9
+		case 97:
+			goto st1
+		case 111:
+			goto st10
+		case 116:
+			goto st7
+		}
+		if 9 <= data[p] && data[p] <= 13 {
+			goto st9
 		}
 		goto st0
 	st_out:
@@ -566,6 +777,30 @@ func MatchOsTvOS(data string) bool {
 	_test_eof4:
 		cs = 4
 		goto _test_eof
+	_test_eof5:
+		cs = 5
+		goto _test_eof
+	_test_eof6:
+		cs = 6
+		goto _test_eof
+	_test_eof7:
+		cs = 7
+		goto _test_eof
+	_test_eof8:
+		cs = 8
+		goto _test_eof
+	_test_eof9:
+		cs = 9
+		goto _test_eof
+	_test_eof10:
+		cs = 10
+		goto _test_eof
+	_test_eof11:
+		cs = 11
+		goto _test_eof
+	_test_eof12:
+		cs = 12
+		goto _test_eof
 
 	_test_eof:
 		{
@@ -577,7 +812,7 @@ func MatchOsTvOS(data string) bool {
 	return false
 }
 
-//line os_fsm.go:542
+//line os_fsm.go:761
 const os_roku_start int = 0
 const os_roku_first_final int = 6
 const os_roku_error int = -1
@@ -589,12 +824,12 @@ const os_roku_en_main int = 0
 func MatchOsRoku(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-//line os_fsm.go:556
+//line os_fsm.go:775
 	{
 		cs = os_roku_start
 	}
 
-//line os_fsm.go:561
+//line os_fsm.go:780
 	{
 		if p == pe {
 			goto _test_eof
@@ -687,7 +922,7 @@ func MatchOsRoku(data string) bool {
 			goto _test_eof6
 		}
 	st_case_6:
-//line os_fsm.go:654
+//line os_fsm.go:873
 		switch data[p] {
 		case 32:
 			goto st4
@@ -747,7 +982,7 @@ func MatchOsRoku(data string) bool {
 			goto _test_eof7
 		}
 	st_case_7:
-//line os_fsm.go:714
+//line os_fsm.go:933
 		switch data[p] {
 		case 82:
 			goto st1
@@ -791,7 +1026,7 @@ func MatchOsRoku(data string) bool {
 	return false
 }
 
-//line os_fsm.go:741
+//line os_fsm.go:960
 const os_fireos_start int = 0
 const os_fireos_first_final int = 7
 const os_fireos_error int = -1
@@ -803,12 +1038,12 @@ const os_fireos_en_main int = 0
 func MatchOsFireOS(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-//line os_fsm.go:755
+//line os_fsm.go:974
 	{
 		cs = os_fireos_start
 	}
 
-//line os_fsm.go:760
+//line os_fsm.go:979
 	{
 		if p == pe {
 			goto _test_eof
@@ -903,7 +1138,7 @@ func MatchOsFireOS(data string) bool {
 			goto _test_eof7
 		}
 	st_case_7:
-//line os_fsm.go:855
+//line os_fsm.go:1074
 		switch data[p] {
 		case 43:
 			goto st4
@@ -964,7 +1199,7 @@ func MatchOsFireOS(data string) bool {
 			goto _test_eof8
 		}
 	st_case_8:
-//line os_fsm.go:916
+//line os_fsm.go:1135
 		switch data[p] {
 		case 70:
 			goto st1
@@ -1027,9 +1262,9 @@ func MatchOsFireOS(data string) bool {
 	return false
 }
 
-//line os_fsm.go:960
+//line os_fsm.go:1179
 const os_smartcast_start int = 0
-const os_smartcast_first_final int = 13
+const os_smartcast_first_final int = 17
 const os_smartcast_error int = -1
 
 const os_smartcast_en_main int = 0
@@ -1039,12 +1274,12 @@ const os_smartcast_en_main int = 0
 func MatchOsSmartCast(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-//line os_fsm.go:974
+//line os_fsm.go:1193
 	{
 		cs = os_smartcast_start
 	}
 
-//line os_fsm.go:979
+//line os_fsm.go:1198
 	{
 		if p == pe {
 			goto _test_eof
@@ -1068,8 +1303,8 @@ func MatchOsSmartCast(data string) bool {
 			goto st_case_7
 		case 8:
 			goto st_case_8
-		case 13:
-			goto st_case_13
+		case 17:
+			goto st_case_17
 		case 9:
 			goto st_case_9
 		case 10:
@@ -1078,8 +1313,18 @@ func MatchOsSmartCast(data string) bool {
 			goto st_case_11
 		case 12:
 			goto st_case_12
+		case 18:
+			goto st_case_18
+		case 13:
+			goto st_case_13
 		case 14:
 			goto st_case_14
+		case 15:
+			goto st_case_15
+		case 16:
+			goto st_case_16
+		case 19:
+			goto st_case_19
 		}
 		goto st_out
 	st0:
@@ -1090,8 +1335,12 @@ func MatchOsSmartCast(data string) bool {
 		switch data[p] {
 		case 83:
 			goto st1
+		case 86:
+			goto st13
 		case 115:
 			goto st1
+		case 118:
+			goto st13
 		}
 		goto st0
 	st1:
@@ -1104,10 +1353,14 @@ func MatchOsSmartCast(data string) bool {
 			goto st2
 		case 83:
 			goto st1
+		case 86:
+			goto st13
 		case 109:
 			goto st2
 		case 115:
 			goto st1
+		case 118:
+			goto st13
 		}
 		goto st0
 	st2:
@@ -1120,10 +1373,14 @@ func MatchOsSmartCast(data string) bool {
 			goto st3
 		case 83:
 			goto st1
+		case 86:
+			goto st13
 		case 97:
 			goto st3
 		case 115:
 			goto st1
+		case 118:
+			goto st13
 		}
 		goto st0
 	st3:
@@ -1136,10 +1393,14 @@ func MatchOsSmartCast(data string) bool {
 			goto st4
 		case 83:
 			goto st1
+		case 86:
+			goto st13
 		case 114:
 			goto st4
 		case 115:
 			goto st1
+		case 118:
+			goto st13
 		}
 		goto st0
 	st4:
@@ -1152,10 +1413,14 @@ func MatchOsSmartCast(data string) bool {
 			goto st1
 		case 84:
 			goto st5
+		case 86:
+			goto st13
 		case 115:
 			goto st1
 		case 116:
 			goto st5
+		case 118:
+			goto st13
 		}
 		goto st0
 	st5:
@@ -1168,10 +1433,14 @@ func MatchOsSmartCast(data string) bool {
 			goto st6
 		case 83:
 			goto st1
+		case 86:
+			goto st13
 		case 99:
 			goto st6
 		case 115:
 			goto st1
+		case 118:
+			goto st13
 		}
 		goto st0
 	st6:
@@ -1184,10 +1453,14 @@ func MatchOsSmartCast(data string) bool {
 			goto st7
 		case 83:
 			goto st1
+		case 86:
+			goto st13
 		case 97:
 			goto st7
 		case 115:
 			goto st1
+		case 118:
+			goto st13
 		}
 		goto st0
 	st7:
@@ -1198,8 +1471,12 @@ func MatchOsSmartCast(data string) bool {
 		switch data[p] {
 		case 83:
 			goto st8
+		case 86:
+			goto st13
 		case 115:
 			goto st8
+		case 118:
+			goto st13
 		}
 		goto st0
 	st8:
@@ -1213,25 +1490,29 @@ func MatchOsSmartCast(data string) bool {
 		case 83:
 			goto st1
 		case 84:
-			goto tr9
+			goto tr10
+		case 86:
+			goto st13
 		case 109:
 			goto st2
 		case 115:
 			goto st1
 		case 116:
-			goto tr9
+			goto tr10
+		case 118:
+			goto st13
 		}
 		goto st0
-	tr9:
+	tr10:
 //line os_fsm.rl:86
 		return true
-		goto st13
-	st13:
+		goto st17
+	st17:
 		if p++; p == pe {
-			goto _test_eof13
+			goto _test_eof17
 		}
-	st_case_13:
-//line os_fsm.go:1166
+	st_case_17:
+//line os_fsm.go:1431
 		switch data[p] {
 		case 37:
 			goto st9
@@ -1239,10 +1520,14 @@ func MatchOsSmartCast(data string) bool {
 			goto st12
 		case 83:
 			goto st1
+		case 86:
+			goto st13
 		case 111:
 			goto st12
 		case 115:
 			goto st1
+		case 118:
+			goto st13
 		}
 		goto st0
 	st9:
@@ -1255,8 +1540,12 @@ func MatchOsSmartCast(data string) bool {
 			goto st10
 		case 83:
 			goto st1
+		case 86:
+			goto st13
 		case 115:
 			goto st1
+		case 118:
+			goto st13
 		}
 		goto st0
 	st10:
@@ -1269,8 +1558,12 @@ func MatchOsSmartCast(data string) bool {
 			goto st11
 		case 83:
 			goto st1
+		case 86:
+			goto st13
 		case 115:
 			goto st1
+		case 118:
+			goto st13
 		}
 		goto st0
 	st11:
@@ -1283,10 +1576,14 @@ func MatchOsSmartCast(data string) bool {
 			goto st12
 		case 83:
 			goto st1
+		case 86:
+			goto st13
 		case 111:
 			goto st12
 		case 115:
 			goto st1
+		case 118:
+			goto st13
 		}
 		goto st0
 	st12:
@@ -1296,30 +1593,144 @@ func MatchOsSmartCast(data string) bool {
 	st_case_12:
 		switch data[p] {
 		case 83:
-			goto tr13
+			goto tr14
+		case 86:
+			goto st13
 		case 115:
-			goto tr13
+			goto tr14
+		case 118:
+			goto st13
 		}
 		goto st0
-	tr13:
+	tr14:
 //line os_fsm.rl:86
 		return true
-		goto st14
-	st14:
+		goto st18
+	st18:
 		if p++; p == pe {
-			goto _test_eof14
+			goto _test_eof18
 		}
-	st_case_14:
-//line os_fsm.go:1245
+	st_case_18:
+//line os_fsm.go:1530
 		switch data[p] {
 		case 77:
 			goto st2
 		case 83:
 			goto st1
+		case 86:
+			goto st13
 		case 109:
 			goto st2
 		case 115:
 			goto st1
+		case 118:
+			goto st13
+		}
+		goto st0
+	st13:
+		if p++; p == pe {
+			goto _test_eof13
+		}
+	st_case_13:
+		switch data[p] {
+		case 73:
+			goto st14
+		case 83:
+			goto st1
+		case 86:
+			goto st13
+		case 105:
+			goto st14
+		case 115:
+			goto st1
+		case 118:
+			goto st13
+		}
+		goto st0
+	st14:
+		if p++; p == pe {
+			goto _test_eof14
+		}
+	st_case_14:
+		switch data[p] {
+		case 83:
+			goto st1
+		case 86:
+			goto st13
+		case 90:
+			goto st15
+		case 115:
+			goto st1
+		case 118:
+			goto st13
+		case 122:
+			goto st15
+		}
+		goto st0
+	st15:
+		if p++; p == pe {
+			goto _test_eof15
+		}
+	st_case_15:
+		switch data[p] {
+		case 73:
+			goto st16
+		case 83:
+			goto st1
+		case 86:
+			goto st13
+		case 105:
+			goto st16
+		case 115:
+			goto st1
+		case 118:
+			goto st13
+		}
+		goto st0
+	st16:
+		if p++; p == pe {
+			goto _test_eof16
+		}
+	st_case_16:
+		switch data[p] {
+		case 79:
+			goto tr18
+		case 83:
+			goto st1
+		case 86:
+			goto st13
+		case 111:
+			goto tr18
+		case 115:
+			goto st1
+		case 118:
+			goto st13
+		}
+		goto st0
+	tr18:
+//line os_fsm.rl:86
+		return true
+		goto st19
+	st19:
+		if p++; p == pe {
+			goto _test_eof19
+		}
+	st_case_19:
+//line os_fsm.go:1635
+		switch data[p] {
+		case 32:
+			goto st11
+		case 83:
+			goto st1
+		case 86:
+			goto st13
+		case 115:
+			goto st1
+		case 118:
+			goto st13
+		}
+		if 9 <= data[p] && data[p] <= 13 {
+			goto st11
 		}
 		goto st0
 	st_out:
@@ -1350,8 +1761,8 @@ func MatchOsSmartCast(data string) bool {
 	_test_eof8:
 		cs = 8
 		goto _test_eof
-	_test_eof13:
-		cs = 13
+	_test_eof17:
+		cs = 17
 		goto _test_eof
 	_test_eof9:
 		cs = 9
@@ -1365,8 +1776,23 @@ func MatchOsSmartCast(data string) bool {
 	_test_eof12:
 		cs = 12
 		goto _test_eof
+	_test_eof18:
+		cs = 18
+		goto _test_eof
+	_test_eof13:
+		cs = 13
+		goto _test_eof
 	_test_eof14:
 		cs = 14
+		goto _test_eof
+	_test_eof15:
+		cs = 15
+		goto _test_eof
+	_test_eof16:
+		cs = 16
+		goto _test_eof
+	_test_eof19:
+		cs = 19
 		goto _test_eof
 
 	_test_eof:
@@ -1379,7 +1805,7 @@ func MatchOsSmartCast(data string) bool {
 	return false
 }
 
-//line os_fsm.go:1283
+//line os_fsm.go:1683
 const os_webos_start int = 0
 const os_webos_first_final int = 7
 const os_webos_error int = -1
@@ -1391,12 +1817,12 @@ const os_webos_en_main int = 0
 func MatchOsWebOS(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-//line os_fsm.go:1297
+//line os_fsm.go:1697
 	{
 		cs = os_webos_start
 	}
 
-//line os_fsm.go:1302
+//line os_fsm.go:1702
 	{
 		if p == pe {
 			goto _test_eof
@@ -1507,7 +1933,7 @@ func MatchOsWebOS(data string) bool {
 			goto _test_eof7
 		}
 	st_case_7:
-//line os_fsm.go:1413
+//line os_fsm.go:1813
 		switch data[p] {
 		case 32:
 			goto st5
@@ -1567,7 +1993,7 @@ func MatchOsWebOS(data string) bool {
 			goto _test_eof8
 		}
 	st_case_8:
-//line os_fsm.go:1473
+//line os_fsm.go:1873
 		switch data[p] {
 		case 87:
 			goto st1
@@ -1614,7 +2040,7 @@ func MatchOsWebOS(data string) bool {
 	return false
 }
 
-//line os_fsm.go:1501
+//line os_fsm.go:1901
 const os_tizen_start int = 0
 const os_tizen_first_final int = 6
 const os_tizen_error int = -1
@@ -1626,12 +2052,12 @@ const os_tizen_en_main int = 0
 func MatchOsTizen(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-//line os_fsm.go:1515
+//line os_fsm.go:1915
 	{
 		cs = os_tizen_start
 	}
 
-//line os_fsm.go:1520
+//line os_fsm.go:1920
 	{
 		if p == pe {
 			goto _test_eof
@@ -1740,7 +2166,7 @@ func MatchOsTizen(data string) bool {
 			goto _test_eof6
 		}
 	st_case_6:
-//line os_fsm.go:1629
+//line os_fsm.go:2029
 		switch data[p] {
 		case 84:
 			goto st5
@@ -1777,7 +2203,7 @@ func MatchOsTizen(data string) bool {
 			goto _test_eof7
 		}
 	st_case_7:
-//line os_fsm.go:1666
+//line os_fsm.go:2066
 		switch data[p] {
 		case 84:
 			goto st1
@@ -1821,7 +2247,7 @@ func MatchOsTizen(data string) bool {
 	return false
 }
 
-//line os_fsm.go:1693
+//line os_fsm.go:2093
 const os_linux_start int = 0
 const os_linux_first_final int = 5
 const os_linux_error int = -1
@@ -1833,12 +2259,12 @@ const os_linux_en_main int = 0
 func MatchOsLinux(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-//line os_fsm.go:1707
+//line os_fsm.go:2107
 	{
 		cs = os_linux_start
 	}
 
-//line os_fsm.go:1712
+//line os_fsm.go:2112
 	{
 		if p == pe {
 			goto _test_eof
@@ -1943,7 +2369,7 @@ func MatchOsLinux(data string) bool {
 			goto _test_eof5
 		}
 	st_case_5:
-//line os_fsm.go:1817
+//line os_fsm.go:2217
 		switch data[p] {
 		case 76:
 			goto st1
@@ -1981,7 +2407,7 @@ func MatchOsLinux(data string) bool {
 	return false
 }
 
-//line os_fsm.go:1842
+//line os_fsm.go:2242
 const os_vidaa_start int = 0
 const os_vidaa_first_final int = 5
 const os_vidaa_error int = -1
@@ -1993,12 +2419,12 @@ const os_vidaa_en_main int = 0
 func MatchOsVidaa(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-//line os_fsm.go:1856
+//line os_fsm.go:2256
 	{
 		cs = os_vidaa_start
 	}
 
-//line os_fsm.go:1861
+//line os_fsm.go:2261
 	{
 		if p == pe {
 			goto _test_eof
@@ -2103,7 +2529,7 @@ func MatchOsVidaa(data string) bool {
 			goto _test_eof5
 		}
 	st_case_5:
-//line os_fsm.go:1966
+//line os_fsm.go:2366
 		switch data[p] {
 		case 86:
 			goto st1
@@ -2141,7 +2567,7 @@ func MatchOsVidaa(data string) bool {
 	return false
 }
 
-//line os_fsm.go:1991
+//line os_fsm.go:2391
 const os_reachtv_start int = 0
 const os_reachtv_first_final int = 7
 const os_reachtv_error int = -1
@@ -2153,12 +2579,12 @@ const os_reachtv_en_main int = 0
 func MatchOsReachTV(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-//line os_fsm.go:2005
+//line os_fsm.go:2405
 	{
 		cs = os_reachtv_start
 	}
 
-//line os_fsm.go:2010
+//line os_fsm.go:2410
 	{
 		if p == pe {
 			goto _test_eof
@@ -2299,7 +2725,7 @@ func MatchOsReachTV(data string) bool {
 			goto _test_eof7
 		}
 	st_case_7:
-//line os_fsm.go:2151
+//line os_fsm.go:2551
 		switch data[p] {
 		case 82:
 			goto st1
@@ -2343,9 +2769,9 @@ func MatchOsReachTV(data string) bool {
 	return false
 }
 
-//line os_fsm.go:2178
+//line os_fsm.go:2578
 const os_chromeos_start int = 0
-const os_chromeos_first_final int = 8
+const os_chromeos_first_final int = 11
 const os_chromeos_error int = -1
 
 const os_chromeos_en_main int = 0
@@ -2355,12 +2781,12 @@ const os_chromeos_en_main int = 0
 func MatchOsChromeOS(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 
-//line os_fsm.go:2192
+//line os_fsm.go:2592
 	{
 		cs = os_chromeos_start
 	}
 
-//line os_fsm.go:2197
+//line os_fsm.go:2597
 	{
 		if p == pe {
 			goto _test_eof
@@ -2378,12 +2804,20 @@ func MatchOsChromeOS(data string) bool {
 			goto st_case_4
 		case 5:
 			goto st_case_5
+		case 11:
+			goto st_case_11
 		case 6:
 			goto st_case_6
 		case 7:
 			goto st_case_7
+		case 12:
+			goto st_case_12
 		case 8:
 			goto st_case_8
+		case 9:
+			goto st_case_9
+		case 10:
+			goto st_case_10
 		}
 		goto st_out
 	st0:
@@ -2471,10 +2905,36 @@ func MatchOsChromeOS(data string) bool {
 		case 67:
 			goto st1
 		case 69:
-			goto st6
+			goto tr6
 		case 99:
 			goto st1
 		case 101:
+			goto tr6
+		}
+		goto st0
+	tr6:
+//line os_fsm.rl:176
+		return true
+		goto st11
+	st11:
+		if p++; p == pe {
+			goto _test_eof11
+		}
+	st_case_11:
+//line os_fsm.go:2732
+		switch data[p] {
+		case 32:
+			goto st6
+		case 67:
+			goto st8
+		case 79:
+			goto st7
+		case 99:
+			goto st8
+		case 111:
+			goto st7
+		}
+		if 9 <= data[p] && data[p] <= 13 {
 			goto st6
 		}
 		goto st0
@@ -2513,18 +2973,70 @@ func MatchOsChromeOS(data string) bool {
 	tr8:
 //line os_fsm.rl:176
 		return true
-		goto st8
-	st8:
+		goto st12
+	st12:
 		if p++; p == pe {
-			goto _test_eof8
+			goto _test_eof12
 		}
-	st_case_8:
-//line os_fsm.go:2356
+	st_case_12:
+//line os_fsm.go:2790
 		switch data[p] {
 		case 67:
 			goto st1
 		case 99:
 			goto st1
+		}
+		goto st0
+	st8:
+		if p++; p == pe {
+			goto _test_eof8
+		}
+	st_case_8:
+		switch data[p] {
+		case 65:
+			goto st9
+		case 67:
+			goto st1
+		case 72:
+			goto st2
+		case 97:
+			goto st9
+		case 99:
+			goto st1
+		case 104:
+			goto st2
+		}
+		goto st0
+	st9:
+		if p++; p == pe {
+			goto _test_eof9
+		}
+	st_case_9:
+		switch data[p] {
+		case 67:
+			goto st1
+		case 83:
+			goto st10
+		case 99:
+			goto st1
+		case 115:
+			goto st10
+		}
+		goto st0
+	st10:
+		if p++; p == pe {
+			goto _test_eof10
+		}
+	st_case_10:
+		switch data[p] {
+		case 67:
+			goto st1
+		case 84:
+			goto tr8
+		case 99:
+			goto st1
+		case 116:
+			goto tr8
 		}
 		goto st0
 	st_out:
@@ -2546,14 +3058,26 @@ func MatchOsChromeOS(data string) bool {
 	_test_eof5:
 		cs = 5
 		goto _test_eof
+	_test_eof11:
+		cs = 11
+		goto _test_eof
 	_test_eof6:
 		cs = 6
 		goto _test_eof
 	_test_eof7:
 		cs = 7
 		goto _test_eof
+	_test_eof12:
+		cs = 12
+		goto _test_eof
 	_test_eof8:
 		cs = 8
+		goto _test_eof
+	_test_eof9:
+		cs = 9
+		goto _test_eof
+	_test_eof10:
+		cs = 10
 		goto _test_eof
 
 	_test_eof:
