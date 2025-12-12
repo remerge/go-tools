@@ -1,6 +1,8 @@
 //go:generate ragel -Z -G2 os_fsm.rl
 package normalize
 
+import "strings"
+
 // Os returns a normalized OS name (android, ios, tvos, roku, fireos, smartcast, webos, tizen, linux, vidaa, reachtv, or chromeos)
 // based on what can be found in the given string
 func Os(os string) string {
@@ -44,5 +46,8 @@ func Os(os string) string {
 	if MatchOsLinux(os) {
 		return "linux"
 	}
-	return ""
+
+	// For non-normalized OS values, remove spaces and convert to lowercase
+	// to consolidate variations (e.g., "Unknown OS" and "UnknownOS" -> "unknownos")
+	return strings.ToLower(strings.ReplaceAll(os, " ", ""))
 }

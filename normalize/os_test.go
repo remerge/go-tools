@@ -132,6 +132,30 @@ func TestNormalizeOs(t *testing.T) {
 	}
 }
 
+func TestNormalizeOs_UnknownOsLowercased(t *testing.T) {
+	testCases := []struct {
+		input    string
+		expected string
+	}{
+		{"Windows", "windows"},
+		{"MACOS", "macos"},
+		{"PlayStation", "playstation"},
+		{"Xbox", "xbox"},
+		{"Unknown_OS", "unknown_os"},
+		{"SomeRandomOS", "somerandomos"},
+		{"", ""},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.input, func(t *testing.T) {
+			result := Os(tc.input)
+			if result != tc.expected {
+				t.Errorf("Os(%q) = %q, want %q", tc.input, result, tc.expected)
+			}
+		})
+	}
+}
+
 var osRegExp = regexp.MustCompile("(?i)(?P<ios>ipod|iphone|ipad|ios)|(?P<android>android)")
 var benchOs = "iPhone X"
 
