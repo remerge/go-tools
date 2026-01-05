@@ -27,6 +27,12 @@ func TestNormalizeOs(t *testing.T) {
 			"TVOS",
 			"tvos",
 			"Apple tvOS",
+			"TV_OS",
+			"tv os",
+			"TV OS",
+			"appletv",
+			"AppleTV",
+			"APPLETV",
 		},
 		"roku": {
 			"roku",
@@ -62,6 +68,12 @@ func TestNormalizeOs(t *testing.T) {
 			"viziosmartcast",
 			"VizioSmartCast",
 			"VIZIOSMARTCAST",
+			"vizio",
+			"Vizio",
+			"VIZIO",
+			"vizio os",
+			"Vizio OS",
+			"VIZIO OS",
 		},
 		"webos": {
 			"webos",
@@ -100,6 +112,15 @@ func TestNormalizeOs(t *testing.T) {
 			"chromeos",
 			"ChromeOS",
 			"CHROMEOS",
+			"Chrome OS",
+			"chrome os",
+			"CHROME OS",
+			"chrome",
+			"Chrome",
+			"CHROME",
+			"chromecast",
+			"ChromeCast",
+			"CHROMECAST",
 		},
 	} {
 		for _, s := range strings {
@@ -108,6 +129,30 @@ func TestNormalizeOs(t *testing.T) {
 				t.Errorf("expected %s for '%s' but got %s", os, s, nos)
 			}
 		}
+	}
+}
+
+func TestNormalizeOs_UnknownOsLowercased(t *testing.T) {
+	testCases := []struct {
+		input    string
+		expected string
+	}{
+		{"Windows", "windows"},
+		{"MACOS", "macos"},
+		{"PlayStation", "playstation"},
+		{"Xbox", "xbox"},
+		{"Unknown_OS", "unknown_os"},
+		{"SomeRandomOS", "somerandomos"},
+		{"", ""},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.input, func(t *testing.T) {
+			result := Os(tc.input)
+			if result != tc.expected {
+				t.Errorf("Os(%q) = %q, want %q", tc.input, result, tc.expected)
+			}
+		})
 	}
 }
 
@@ -130,6 +175,17 @@ func BenchmarkOsRagel(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			if MatchOsiOS(benchOs) {
+				hits++
+			}
+		}
+	})
+}
+
+func BenchmarkOsNonNormalized(b *testing.B) {
+	var hits int
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			if Os("Unknown OS") != "" {
 				hits++
 			}
 		}

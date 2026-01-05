@@ -38,7 +38,7 @@ func MatchOsAndroid(data string) bool {
 func MatchOsTvOS(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	%%{
-		main := any* 'tvos'i @{ return true } ;
+		main := any* ('tvos'i | 'tv'i ('_'|space) 'os'i | 'appletv'i) @{ return true } ;
 		write init;
 		write exec;
 	}%%
@@ -83,7 +83,7 @@ func MatchOsFireOS(data string) bool {
 func MatchOsSmartCast(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	%%{
-		main := any* (('vizio'i)? 'smartcast'i ('os'i | '%20os'i)?) @{ return true } ;
+		main := any* (('vizio'i)? 'smartcast'i ('os'i | '%20os'i)? | 'vizio'i (space 'os'i)?) @{ return true } ;
 		write init;
 		write exec;
 	}%%
@@ -173,7 +173,7 @@ func MatchOsReachTV(data string) bool {
 func MatchOsChromeOS(data string) bool {
 	cs, p, pe := 0, 0, len(data)
 	%%{
-		main := any* 'chromeos'i @{ return true } ;
+		main := any* ('chromeos'i | 'chromecast'i | 'chrome'i (space 'os'i)?) @{ return true } ;
 		write init;
 		write exec;
 	}%%
