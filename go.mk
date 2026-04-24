@@ -1,9 +1,12 @@
-
+.PHONY: go-install
+go-install:: ## install Go modules
+	go get ./...
+update:: go-install
 
 .PHONY: go-update
 go-update:: ## update Go modules
-	go get -u -x ./... 2>&1 | grep -vP '^(#|mkdir|cd|\d\.\d\d\ds #)' || :
-	go mod tidy -v -x
+	go get ./...
+	go mod tidy
 update:: go-update
 
 .PHONY: go-build
@@ -24,6 +27,21 @@ GO_SOURCES = $(shell find . -type f \( -iname '*.go' \) -not \( -path "./vendor/
 export GO111MODULE = on
 export CGO_ENABLED = 0
 export GOPRIVATE ?= github.com/remerge/*
+
+GIT_REMOTE ?= origin
+BASE_REF ?= $(if $(GIT_BASE_REF),$(GIT_BASE_REF),$(shell \
+  ref=$$(git symbolic-ref --quiet "refs/remotes/$(GIT_REMOTE)/HEAD" 2>/dev/null \
+    | sed 's|^refs/remotes/||'); \
+  if [ -n "$$ref" ]; then \
+    echo "$$ref"; \
+  else \
+    echo "__UNRESOLVED__"; \
+  fi \
+))
+
+BASE_REMOTE = $(firstword $(subst /, ,$(BASE_REF)))
+BASE_BRANCH = $(patsubst $(BASE_REMOTE)/%,%,$(BASE_REF))
+export BASE_REF BASE_BRANCH
 
 # do not use automatic targets
 .SUFFIXES:
@@ -132,7 +150,11 @@ endif
 .PHONY: .lint-mod-tidy
 
 .lint-dm: ## check if dm.SchemaVersion is up-to-date
-	./bin/check_dm_schema_version.sh
+	@if [ -x ./bin/check_dm_schema_version.sh ]; then \
+		./bin/check_dm_schema_version.sh; \
+	else \
+		echo "Skipping dm schema version check: ./bin/check_dm_schema_version.sh not present"; \
+	fi
 
 # Building binaries
 
@@ -210,6 +232,38 @@ endif
 
 .input-validation: .input-validation-host .input-validation-cluster .token-validation
 
+.check-master-sync:
+	@if [ "$(BASE_REF)" = "__UNRESOLVED__" ]; then \
+		echo ""; \
+		printf "\033[30;43mWARNING:\033[0m Could not determine the default branch for remote '$(GIT_REMOTE)'\n"; \
+		echo "         This repository may not expose a remote HEAD or uses a non-standard base branch."; \
+		echo ""; \
+		echo "         Please specify it explicitly, for example:"; \
+		echo "           make GIT_BASE_REF=$(GIT_REMOTE)/main"; \
+		echo "           make GIT_BASE_REF=$(GIT_REMOTE)/master"; \
+		echo ""; \
+		exit 1; \
+	fi
+
+	@echo "Checking if branch includes latest $(BASE_REF)..."
+
+	@git fetch "$(BASE_REMOTE)" "$(BASE_BRANCH)" --quiet 2>/dev/null || \
+		echo "Warning: failed to fetch $(BASE_REF); using local ref"
+
+	@if ! git merge-base --is-ancestor "$(BASE_REF)" HEAD 2>/dev/null; then \
+		echo ""; \
+		printf "\033[30;43mWARNING:\033[0m Your branch does not include the latest changes from $(BASE_REF)\n"; \
+		echo "         Consider rebasing or merging:"; \
+		echo "           git rebase $(BASE_REF)"; \
+		echo "           git merge  $(BASE_REF)"; \
+		echo ""; \
+		read -p "Continue with deployment anyway? [y/N] " confirm; \
+		if [ "$$confirm" != "y" ] && [ "$$confirm" != "Y" ]; then \
+			echo "Deployment aborted."; \
+			exit 1; \
+		fi; \
+	fi
+
 .check-dependencies: .check-support
 	@command -v nomad >/dev/null 2>&1 \
 	|| { echo >&2 "Error: Please install hashicorp nomad to proceed ..."; exit 1; }
@@ -220,7 +274,7 @@ endif
 	@command -v docker >/dev/null 2>&1 \
 	|| { echo >&2 "Error: Please install docker to proceed ..."; exit 1; }
 
-divert: .check-dependencies .nomad-env .input-validation
+divert: .check-master-sync .check-dependencies .nomad-env .input-validation
 	@mkdir -p .build
 	@docker build \
 	--platform linux/amd64 \
