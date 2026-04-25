@@ -31,11 +31,11 @@ jobs:
     steps:
       - name: Checkout repository
         # https://github.com/actions/checkout/releases
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.2
 
       - name: Setup SSH agent
         # https://github.com/webfactory/ssh-agent/releases
-        uses: webfactory/ssh-agent@v0.9.1
+        uses: webfactory/ssh-agent@v0.10.0
         with:
           ssh-private-key: "${{ secrets.DEPLOY_USER_SSH_KEY }}"
 
@@ -45,15 +45,20 @@ jobs:
           git config --global url."git@github.com:".insteadOf "https://github.com/"
           git config --global advice.detachedHead false
 
+      - name: Setup Python
+        uses: actions/setup-python@v6.2.0
+        with:
+          python-version: "3.14"
+
       - name: Setup Go
         # https://github.com/actions/setup-go/releases
-        uses: actions/setup-go@v6.0.0
+        uses: actions/setup-go@v6.4.0
         with:
           go-version: "stable"
 
       - name: Load envrc
         # https://github.com/HatsuneMiku3939/direnv-action/releases
-        uses: HatsuneMiku3939/direnv-action@v1.1.0
+        uses: HatsuneMiku3939/direnv-action@v1.2.1
 
       - name: Install project dependencies
         run: make install
