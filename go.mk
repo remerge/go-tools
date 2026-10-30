@@ -1,14 +1,17 @@
-
+.PHONY: go-install
+go-install:: ## install Go modules
+	go get ./...
+update:: go-install
 
 .PHONY: go-update
 go-update:: ## update Go modules
-	go get -u -x ./... 2>&1 | grep -vP '^(#|mkdir|cd|\d\.\d\d\ds #)' || :
-	go mod tidy -v -x
+	go get ./...
+	go mod tidy
 update:: go-update
 
 .PHONY: go-build
 go-build: ## build a Go binary matching the local architecture
-go-build: .build/$(.BIN_LOCAL)
+go-build: local
 build:: go-build
 
 .PHONY: go-clean
@@ -52,9 +55,6 @@ generate:: $(GENERATE_SOURCES)
 	go generate ./...
 	$(MAKE) fmt
 
-format::
-	pre-commit run golangci-lint-fmt --all-files
-
 # Dependencies cleanup
 
 mod-tidy:	## tidy go.mod
@@ -97,9 +97,9 @@ watch: $(TOOLS)/github.com/cespare/reflex
 
 # *lint* target will run golang-ci.
 
-GO_LOCAL_CHECK_TARGETS=.lint-mod-tidy .lint-golangci .lint-dm
+GO_LOCAL_CHECK_TARGETS=.lint-mod-tidy .lint-golangci
 # for CI, `golangci` linter is called within the job
-GO_CI_CHECK_TARGETS=.lint-mod-tidy .lint-dm
+GO_CI_CHECK_TARGETS=.lint-mod-tidy
 go-check:
 ifeq ($(GITHUB_JOB),pre-commit)
 	$(MAKE) $(GO_CI_CHECK_TARGETS)
@@ -131,9 +131,6 @@ endif
 .NOTPARALLEL: .lint-mod-tidy
 .PHONY: .lint-mod-tidy
 
-.lint-dm: ## check if dm.SchemaVersion is up-to-date
-	./bin/check_dm_schema_version.sh
-
 # Building binaries
 
 LDIMPORT=github.com/remerge/go-service
@@ -150,159 +147,3 @@ dist: .build/$(PROJECT_ID).linux.amd64	## linux amd64 binary
 .BIN_LOCAL = $(PROJECT_ID).$(shell go env GOOS).$(shell go env GOARCH)
 
 local: .build/$(.BIN_LOCAL)
-
-# Deployment
-
-release:
-	git push origin master:production
-
-_DIVERT_HOST_NAME ?= $(shell echo $(DIVERT_TARGET) | cut -d . -f 1)
-_DIVERT_CLUSTER ?= $(shell echo $(DIVERT_TARGET) | cut -d . -f 2)
-TASK_IMAGE = $(SERVICES_ARTIFACT_REGISTRY)$(PROJECT_ID):$(DEV_COMMIT)
-PRIORITY := 70
-DIVERT_HOST_NAME = $(shell echo $(_DIVERT_HOST_NAME) | tr '[:upper:]' '[:lower:]')
-DIVERT_CLUSTER ?= $(shell echo $(_DIVERT_CLUSTER) | tr '[:upper:]' '[:lower:]')
-UPPER_DIVERT_CLUSTER = $(shell echo $(DIVERT_CLUSTER) | tr '[:lower:]' '[:upper:]')
-
-define setup-nomad-env
-export NOMAD_ADDR = http://nomad.$(DIVERT_CLUSTER).rmge.net:4646/
-export NOMAD_TOKEN = $(shell \
-	auto_nomad_token=""; \
-	if which op > /dev/null 2>&1; then \
-		if token=$$(op read op://Development/NOMAD_TOKEN_$(UPPER_DIVERT_CLUSTER)/credential); then \
-			auto_nomad_token="$$token"; \
-		fi; \
-	fi; \
-	if [ -z "$${auto_nomad_token}" ]; then \
-		eval "echo $$NOMAD_TOKEN_$(UPPER_DIVERT_CLUSTER)"; \
-	else\
-		echo "$${auto_nomad_token}"; \
-	fi\
-)
-endef
-
-.nomad-env:
-	$(eval $(call setup-nomad-env))
-
-.input-validation-host:
-ifeq ($(DIVERT_HOST_NAME),)
-	@echo "DIVERT_HOST_NAME is empty (validate DIVERT_TARGET='$(DIVERT_TARGET)' against '%node%.%host%' format)"
-	@exit 1
-endif
-
-.token-validation:
-ifeq ($${NOMAD_TOKEN},)
-	@echo "Error: Missing Token: Please set Nomad Token for \
-$(DIVERT_CLUSTER) as NOMAD_TOKEN_$(UPPER_DIVERT_CLUSTER)!"
-	@exit 1
-endif
-
-.input-validation-cluster:
-ifeq ($(DIVERT_CLUSTER),)
-	@echo "DIVERT_CLUSTER is empty (validate DIVERT_TARGET='$(DIVERT_TARGET)' against '%node%.%host%' format)"
-	@exit 1
-endif
-
-.check-support:
-	@if [ ! -f nomad.hcl ] && [ ! -f nomad.variables.hcl ]; \
-	then echo "Error: Divert not supported"; \
-	exit 1; fi
-
-.input-validation: .input-validation-host .input-validation-cluster .token-validation
-
-.check-dependencies: .check-support
-	@command -v nomad >/dev/null 2>&1 \
-	|| { echo >&2 "Error: Please install hashicorp nomad to proceed ..."; exit 1; }
-
-	@command -v nomad-pack >/dev/null 2>&1 \
-	|| { echo >&2 "Error: Please install nomad-pack to proceed ..."; exit 1; }
-
-	@command -v docker >/dev/null 2>&1 \
-	|| { echo >&2 "Error: Please install docker to proceed ..."; exit 1; }
-
-divert: .check-dependencies .nomad-env .input-validation
-	@mkdir -p .build
-	@docker build \
-	--platform linux/amd64 \
-	--build-arg "CI_COMMIT=$(CI_COMMIT)" \
-	--build-arg "CI_REPO=$(CI_REPO)" \
-	--ssh default . \
-	-t "$(TASK_IMAGE)"
-
-	@docker push $(TASK_IMAGE)
-
-	@data=$$(nomad var get -region ${DIVERT_CLUSTER} -out json nomad/jobs/$(PROJECT_ID)) && \
-	echo $${data} | nomad var put  -force -namespace "diverts" -region ${DIVERT_CLUSTER} \
-	 -in json nomad/jobs/$(PROJECT_ID)-${DIVERT_HOST_NAME} -
-
-	@if [ -f nomad.variables.hcl ]; \
-	then \
-		sed "s/job_name = \"\(.*\)\"/job_name = \"\1-${DIVERT_HOST_NAME}\"/" \
-		nomad.variables.hcl > .build/.divert.nomad.variables.hcl; \
-		sed -i -e "s|nomad/jobs/$(PROJECT_ID)|nomad/jobs/$(PROJECT_ID)-${DIVERT_HOST_NAME}|" \
-		.build/.divert.nomad.variables.hcl; \
-		sed -i -e "s|\(.*\)count =\(.*\)|count = 1|" .build/.divert.nomad.variables.hcl;  \
-		if [ -n "$(DIVERT_ROLLBAR_OFF)" ]; then \
-			echo "*** WARNING: Rollbar alerts to be suppressed"; \
-			sed -i '/rollbar-token/d' .build/.divert.nomad.variables.hcl; \
-		fi; \
-		nomad-pack registry add remerge-pack github.com/remerge/nomad-pack; \
-		nomad-pack run docker_service \
-		--var='task_image=$(TASK_IMAGE)' --var='priority=$(PRIORITY)' \
-		--var='cluster=${DIVERT_CLUSTER}' --var='service_name=$(PROJECT_ID)' \
-		--var='constraints=[{"attribute":"$$$${attr.unique.hostname}","value": "${DIVERT_HOST_NAME}", "operator": "="}]' \
-		--var='environment=divert' --namespace='diverts' \
-		--var-file=.build/.divert.nomad.variables.hcl \
-		--var 'count_cluster_config={"${DIVERT_CLUSTER}": 1}' \
-		--name=$(PROJECT_ID)-${DIVERT_HOST_NAME} --registry=remerge-pack; \
-	else \
-		sed "s/job \"\(.*\)\" {/job \"\1-${DIVERT_HOST_NAME}\" \
-		{/" nomad.hcl > .build/.divert.nomad.hcl; \
-		sed -i -e "s|nomad/jobs/$(PROJECT_ID)|nomad/jobs/$(PROJECT_ID)-${DIVERT_HOST_NAME}|" \
-		.build/.divert.nomad.hcl; \
-		sed -i -e "s|\(.*\)count =\(.*\)|\1count = 1|" \
-		.build/.divert.nomad.hcl; \
-		if [ -n "$(DIVERT_ROLLBAR_OFF)" ]; then \
-			echo "*** WARNING: Rollbar alerts to be suppressed"; \
-			sed -i '/rollbar-token/d' .build/.divert.nomad.hcl; \
-		fi; \
-		nomad job run -namespace "diverts" -region ${DIVERT_CLUSTER} \
-		-var 'task_image=$(TASK_IMAGE)' -var 'cluster=${DIVERT_CLUSTER}' \
-		-var 'priority=$(PRIORITY)' \
-		-var 'contraint_value=${DIVERT_HOST_NAME}' -var 'environment=divert' \
-		-var 'contraint_attribute=attr.unique.hostname' \
-		.build/.divert.nomad.hcl; \
-	fi \
-
-divert-stop: .check-dependencies .nomad-env .input-validation
-	@nomad job stop -purge -namespace "diverts" \
-	-region ${DIVERT_CLUSTER} $(PROJECT_ID)-${DIVERT_HOST_NAME}
-	@nomad var purge -namespace "diverts" -region ${DIVERT_CLUSTER} \
-	nomad/jobs/$(PROJECT_ID)-${DIVERT_HOST_NAME}
-
-divert-journal: .check-dependencies .nomad-env .input-validation
-	@for allocs in \
-	$$(nomad job allocs -namespace "diverts" -region ${DIVERT_CLUSTER} \
-	-t '{{range .}}{{printf "%s \n" .ID}}{{end}}' $(PROJECT_ID)-${DIVERT_HOST_NAME}); \
-	do \
-	for id in \
-	$$(nomad job inspect -namespace "diverts" -region ${DIVERT_CLUSTER} \
-	-t '{{range .TaskGroups}} {{range .Tasks}} {{ .Name  }}{{end}}{{end}}' $(PROJECT_ID)-${DIVERT_HOST_NAME}); \
-	do \
-	nomad alloc logs -namespace "diverts" $$allocs $$id; \
-	done; \
-	done;
-
-
-divert-status: .check-dependencies .nomad-env .input-validation
-	@echo "==> The divert for ${NAME} in ${DIVERT_CLUSTER} is \
-	`nomad job inspect -namespace diverts -region ${DIVERT_CLUSTER} \
-	-t '{{  .Status  }}' $(PROJECT_ID)-${DIVERT_HOST_NAME}` \
-	`nomad job inspect -namespace diverts -region ${DIVERT_CLUSTER}  \
-	-t '{{range .TaskGroups}} {{range .Tasks}} {{ .Config.image  }}{{end}}{{end}}' \
-	 $(PROJECT_ID)-${DIVERT_HOST_NAME}` ...."
-
-divert-list: .check-dependencies .nomad-env .input-validation-cluster .token-validation
-	@nomad status -namespace diverts -region ${DIVERT_CLUSTER}
-
-.PHONY: divert divert-update divert-stop divert-status .check-dependencies .input-validation .nomad-env

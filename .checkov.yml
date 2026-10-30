@@ -2,6 +2,9 @@
 quiet: true
 compact: false
 
+skip-path:
+  - vendor
+
 skip-check:
   # https://github.com/bridgecrewio/checkov/issues/5286
   - CKV_TF_1

@@ -4,15 +4,15 @@ name: go-lib
 on:
   pull_request:
   push:
-    branches: [main, master, production]
+    branches: [main, master]
 
 permissions:
-  actions: read
+  actions: none
   checks: none
   contents: read
-  deployments: write
+  deployments: none
   discussions: none
-  id-token: write
+  id-token: none
   issues: none
   packages: none
   pages: none
@@ -23,7 +23,7 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/production' }}
+  cancel-in-progress: true
 
 jobs:
   go-checks:
