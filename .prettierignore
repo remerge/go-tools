@@ -1,4 +1,4 @@
 .copier-answers.yml
-.pnp.loader.mjs
+.copier-vars.yml
 .github/prompts/
 CHANGELOG.md

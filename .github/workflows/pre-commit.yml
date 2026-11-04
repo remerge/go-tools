@@ -27,15 +27,15 @@ concurrency:
 
 jobs:
   pre-commit:
-    runs-on: blacksmith-2vcpu-ubuntu-2204
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     steps:
       - name: Checkout repository
         # https://github.com/actions/checkout/releases
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v7.0.1
 
       - name: Setup SSH agent
         # https://github.com/webfactory/ssh-agent/releases
-        uses: webfactory/ssh-agent@v0.9.1
+        uses: webfactory/ssh-agent@v0.10.0
         with:
           ssh-private-key: "${{ secrets.DEPLOY_USER_SSH_KEY }}"
 
@@ -45,15 +45,26 @@ jobs:
           git config --global url."git@github.com:".insteadOf "https://github.com/"
           git config --global advice.detachedHead false
 
+      - name: Setup Python
+        uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Setup NodeJS
+        # https://github.com/actions/setup-node/releases
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version: "24.20.0"
+
       - name: Setup Go
         # https://github.com/actions/setup-go/releases
-        uses: actions/setup-go@v6.0.0
+        uses: actions/setup-go@v7.0.0
         with:
-          go-version: "stable"
+          go-version-file: go.mod
 
       - name: Load envrc
         # https://github.com/HatsuneMiku3939/direnv-action/releases
-        uses: HatsuneMiku3939/direnv-action@v1.1.0
+        uses: HatsuneMiku3939/direnv-action@v1.4.9
 
       - name: Install project dependencies
         run: make install
