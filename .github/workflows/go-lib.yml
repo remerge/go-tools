@@ -27,8 +27,38 @@ concurrency:
 
 jobs:
   go-checks:
-    uses: remerge/workflows/.github/workflows/go-checks.yml@main
-    with:
-      no-lint-gen: true
-    secrets:
-      ssh_key: ${{ secrets.DEPLOY_USER_SSH_KEY }}
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - name: Checkout repository
+        # https://github.com/actions/checkout/releases
+        uses: actions/checkout@v7.0.1
+
+      - name: Setup SSH agent
+        # https://github.com/webfactory/ssh-agent/releases
+        uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: "${{ secrets.DEPLOY_USER_SSH_KEY }}"
+
+      - name: Setup Git
+        run: |
+          curl -f -sL --retry 5 --retry-delay 1 https://api.github.com/meta | jq -r '"github.com "+.ssh_keys[]' >> ~/.ssh/known_hosts
+          git config --global url."git@github.com:".insteadOf "https://github.com/"
+          git config --global advice.detachedHead false
+
+      - name: Setup Go
+        # https://github.com/actions/setup-go/releases
+        # Caches the module and build caches, keyed on go.sum.
+        uses: actions/setup-go@v7.0.0
+        with:
+          go-version-file: go.mod
+
+      - name: Start services
+        if: hashFiles('docker-compose.yml') != ''
+        run: docker compose up -d --build && sleep 1
+
+      - name: Run tests
+        run: make race-nocache
+
+      - name: Stop services
+        if: always() && hashFiles('docker-compose.yml') != ''
+        run: docker compose down
